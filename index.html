@@ -226,9 +226,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .aev .zm{justify-self:start;margin-top:6px;display:inline-flex;align-items:center;gap:6px;font:700 13px var(--body);padding:6px 12px;border-radius:999px;background:var(--meet);color:#fff;text-decoration:none}
 .aev .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--brass-soft);color:var(--brass);margin-left:6px;vertical-align:2px}
 .aempty{padding:24px 0;color:var(--muted);text-align:center}
-.calm{display:grid;gap:12px;width:100%;max-width:760px}
+.calm{display:grid;gap:12px;width:100%;max-width:760px;box-sizing:border-box;min-width:0;grid-template-columns:minmax(0,1fr)}
 .mnav{display:flex;align-items:center;gap:8px}
-.mnav b{flex:1;text-align:center;font:700 22px var(--display);letter-spacing:.02em}
+.mnav b{flex:1;min-width:0;text-align:center;font:700 22px var(--display);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:24px;line-height:1;cursor:pointer}
 .mbtn:disabled{opacity:.35;cursor:default}
 .mtoday{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 13px var(--body);padding:8px 12px;border-radius:999px;cursor:pointer}
@@ -437,6 +437,37 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 @media (prefers-reduced-motion:reduce){.sop summary::after{transition:none}}
 @media (max-width:420px){.next{gap:14px;align-items:start}.dateblock{width:72px}.db-d{font-size:38px}.db-m{font-size:12px}}
 @media (max-width:420px){.panel{padding:14px}}
+/* ---- mobile sizing pass ---- */
+html,body{max-width:100%;overflow-x:clip}
+.wrap>*,[data-view]>*{min-width:0}
+[data-view="sops"]{display:grid;gap:16px}
+@media (max-width:640px){
+  .cfilt,.chips{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
+  .cfilt button,.chips button{padding:7px 11px;font-size:13px}
+  .calbar{flex-wrap:nowrap}
+  .calbar h2{font-size:24px;min-width:0}
+  .seg{flex:none}
+  .seg button{padding:7px 14px}
+  .calm{padding:12px 10px}
+  .mnav b{font-size:20px}
+  .mbtn{width:36px;height:36px;font-size:22px}
+  .mc{min-height:46px;font-size:14px;border-radius:8px}
+  .mc.today>span{width:26px;height:26px}
+  .aday{grid-template-columns:44px minmax(0,1fr);gap:10px}
+  .aev{padding:8px 10px}
+  .aev .an{font-size:15px}
+  .sop summary{gap:8px}
+  .dtop{flex-direction:column-reverse;align-items:flex-start;gap:6px}
+  .due h3{font-size:16px}
+}
+@media (max-width:370px){
+  .tab{font-size:10.5px;padding:10px 1px;letter-spacing:-.02em}
+  .tabs{gap:0}
+  .seg button{padding:6px 10px;font-size:13px}
+  .calbar h2{font-size:21px}
+  .mc{min-height:42px}
+  .mtoday{padding:7px 9px}
+}
 </style>
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
 </head>
@@ -606,7 +637,6 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     <summary>Key dates at a glance</summary>
     <div class="keys" id="keys" style="margin-top:14px"></div>
   </details>
-  </div>
   </div>
 
   <div data-view="playbook" hidden>
@@ -1122,7 +1152,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   const onDay=d=>{const a=d,b=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);return EV.filter(e=>pass(e)&&e.s<b&&e.e>a);};
   const renderDay=()=>{const evs=onDay(sel);document.getElementById("mday").innerHTML='<h3>'+DW[sel.getDay()]+', '+M[sel.getMonth()]+' '+sel.getDate()+(sameDay(sel,now)?' · Today':'')+'</h3>'+(evs.length?evs.map(evCard).join(""):'<p class="as" style="margin:0;color:var(--muted)">Nothing scheduled.</p>');};
   const renderMonth=()=>{const y=vm.getFullYear(),m=vm.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();
-    document.getElementById("m-title").textContent=M[m]+" "+y;
+    document.getElementById("m-title").textContent=(innerWidth<420?MS[m]:M[m])+" "+y;document.getElementById("m-title").setAttribute("aria-label",M[m]+" "+y);
     document.getElementById("m-prev").disabled=vm<=firstM;document.getElementById("m-next").disabled=vm>=lastMo;
     let h=DW.map(d=>'<div class="dw">'+d[0]+'</div>').join("");for(let i=0;i<first;i++)h+='<div class="mc blank" aria-hidden="true"></div>';
     for(let d=1;d<=n;d++){const dt=new Date(y,m,d),evs=onDay(dt);const fast=evs.some(e=>e.type==="fast");
