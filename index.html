@@ -256,7 +256,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="tiles" id="tiles"></div>
     <div class="dash-cols">
       <section class="panel" aria-labelledby="up-h">
-        <h2 id="up-h">Coming up</h2>
+        <h2 id="up-h">Coming up <small style="font:600 14px var(--body);color:var(--muted)">· next 2 weeks</small></h2>
         <ol class="up" id="up-list"></ol>
         <div><a class="btn" href="#calendar">See all upcoming events</a></div>
       </section>
@@ -652,10 +652,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   const wkStart=x=>{const t=day0(x);t.setDate(t.getDate()-((t.getDay()+6)%7));return t;};
   const thisWk=+wkStart(now);
   let html="",lastWk=null;
-  up.slice(0,10).forEach(e=>{const w=+wkStart(e.s);
+  const horizon=day0(now);horizon.setDate(horizon.getDate()+15); // today through 14 days out
+  up.filter(e=>e.s<horizon).forEach(e=>{const w=+wkStart(e.s);
     if(w!==lastWk){const lbl=w===thisWk?"This week":w===thisWk+6048e5?"Next week":"Week of "+MS[new Date(w).getMonth()]+" "+new Date(w).getDate();html+='<li class="wk">'+lbl+'</li>';lastWk=w;}
     html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
-  ul.innerHTML=html||'<li><div></div><div class="us">Nothing else on the calendar for 2027.</div></li>';
+  ul.innerHTML=html||'<li><div></div><div class="us">Nothing scheduled in the next 2 weeks.</div></li>';
 
   // ---------- Due soon ----------
   const DUE=[
