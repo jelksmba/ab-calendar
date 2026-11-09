@@ -144,6 +144,22 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ebtn:hover{filter:brightness(1.08)}
 .ebtn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 .ebtn-m{display:none}
+.devo{display:grid;gap:12px}
+.devo h3{margin:0;font:700 26px/1.1 var(--display);letter-spacing:.02em}
+.devo .meta{margin:4px 0 0;color:var(--muted);font-size:14px}
+.devo p{margin:0;max-width:70ch}
+.devo blockquote{margin:0;padding:12px 16px;border-radius:10px;background:var(--brass-soft);font-style:italic;max-width:70ch}
+.devo blockquote cite{display:block;margin-top:6px;font-style:normal;font-size:13px;font-weight:700;color:var(--brass)}
+.devo .refrain{font-weight:700}
+.devo details{border-top:1px solid var(--line);padding-top:10px}
+.devo summary{cursor:pointer;color:var(--meet);font-weight:700;list-style:none}
+.devo summary::-webkit-details-marker{display:none}
+.devo summary::after{content:" ▾"}
+.devo details[open] summary::after{content:" ▴"}
+.devo summary:focus-visible{outline:3px solid var(--brass);outline-offset:2px;border-radius:4px}
+.devo .full{display:grid;gap:10px;margin-top:12px}
+.devo .full h4{margin:6px 0 0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.devo .full b{display:block}
 .due{grid-template-columns:auto minmax(0,1fr) !important}
 .due .dot{align-self:start;margin-top:7px}
 .dtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
@@ -210,7 +226,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   header h1{font-size:24px}
   [data-view="home"]{display:flex;flex-direction:column}
   [data-view="home"] .dash-cols{display:contents}
-  #next-up{order:1} #due-panel{order:2} section[aria-labelledby="up-h"]{order:3} #tiles{order:4} section[aria-labelledby="sbh-h"]{order:5} .serm{order:6} .sync{order:7} .upd2{order:8}
+  #next-up{order:1} .devo{order:2} #due-panel{order:3} section[aria-labelledby="up-h"]{order:4} #tiles{order:5} section[aria-labelledby="sbh-h"]{order:6} .serm{order:7} .sync{order:8} .upd2{order:9}
   .wkp{display:none}
   .filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
   .filt{white-space:nowrap}
@@ -402,6 +418,27 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 
   <div data-view="home">
     <section class="panel next" id="next-up" aria-label="Next up"></section>
+    <!-- DEVO:START -->
+    <section class="panel devo" aria-labelledby="devo-h">
+      <div class="eyebrow">Devotional</div>
+      <div><h3 id="devo-h">I've Got Your Arm</h3><p class="meta">Exodus 17:8–13 · Matthew 26:36–41</p></div>
+      <p>In Israel's first battle, Moses' arms got tired, so Aaron and Hur held them up until sunset. On the night before the cross, Jesus asked His friends to watch with Him, and they fell asleep. Our job is to watch, and nobody does it alone.</p>
+      <blockquote>“Aaron and Hur held up his hands, the one on the one side, and the other on the other side. His hands were steady until sunset.”<cite>Exodus 17:12</cite></blockquote>
+      <p class="refrain">Tell the AB next to you: “I've got your arm.”</p>
+      <details>
+        <summary>Read the full devotional</summary>
+        <div class="full">
+          <h4>Key points</h4>
+          <p><b>1. Everybody's arms get tired.</b>Moses got tired. Jesus, in His hardest hour, wanted His friends close. Needing help isn't weakness. There are no lone heroes on this team.</p>
+          <p><b>2. Watching is the assignment.</b>Jesus didn't ask them to preach or fight. He asked them to watch. Amalek hit the tired ones from behind. Judas was on his way while the watchmen slept. Danger looks for the moment we drift.</p>
+          <p><b>3. Willing isn't enough. We need each other, and we need prayer.</b>The disciples' hearts were right, but their bodies quit. Jesus said watch and pray. When someone's arms get heavy, be Aaron and Hur, not asleep in the garden.</p>
+          <h4>A prayer for us</h4>
+          <p><i>Lord, thank You for trusting us to watch over Your house. When our arms get tired, help us hold each other up like Aaron and Hur. Keep us awake and alert, not in our own strength, but in Yours. Protect every person who walks through these doors today. Make us the kind of team that stays standing until the sun goes down. In Jesus' name, amen.</i></p>
+          <p class="ainote">Scripture from the World English Bible (public domain).</p>
+        </div>
+      </details>
+    </section>
+    <!-- DEVO:END -->
     <div class="tiles" id="tiles"></div>
     <div class="dash-cols">
       <div class="side">
