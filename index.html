@@ -90,6 +90,25 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
 .btn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 .feed{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
 .feed code{font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;overflow-wrap:anywhere;user-select:all;min-width:0}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.ref .panel{min-width:0}
+.ref h3{font-family:var(--display);font-size:20px;letter-spacing:.03em;margin:0 0 10px}
+.tw{overflow-x:auto}
+.rt{width:100%;border-collapse:collapse;font-size:14px}
+.rt th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:0 8px 6px 0;border-bottom:1px solid var(--line)}
+.rt td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rt tr:last-child td{border-bottom:0}
+.rt td:first-child{font-weight:700;white-space:nowrap}
+.rt .num{font-variant-numeric:tabular-nums}
+.rt .sub2{display:block;color:var(--muted);font-size:13px;font-weight:400}
+.rt a{color:var(--meet);font-weight:600;white-space:nowrap}
+.chip{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid var(--line);margin-right:8px;vertical-align:-1px}
+.lvl{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-weight:700;color:#fff}
+.long{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brass)}
+.ab-row td{background:var(--meet-soft)}
+.addr{margin:0 0 10px;font-weight:600}
+.addr span{display:block;color:var(--muted);font-weight:400;font-size:13px}
 @media (max-width:420px){.panel{padding:14px}}
 </style>
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>
@@ -101,6 +120,10 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
     <div class="eyebrow">Armor Bearers · Key Dates</div>
     <h1>AB Calendar 2027</h1>
     <p class="sub">Every Summit, service day, team meeting, SWOT, Access night, and quarterly outing for the year, in one place.</p>
+    <nav class="jump" aria-label="Page sections">
+      <a class="btn" href="#months">Calendar</a>
+      <a class="btn" href="#quick-reference">Quick Reference</a>
+    </nav>
   </header>
 
   <div class="legend" aria-label="Legend">
@@ -138,6 +161,99 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
   <section>
     <h2>Month by month</h2>
     <div class="months" id="months"></div>
+  </section>
+
+  <section id="quick-reference" aria-labelledby="qr-h">
+    <h2 id="qr-h">Quick Reference</h2>
+    <div class="ref">
+
+      <div class="panel">
+        <h3>Emergency Services</h3>
+        <p class="addr">Church<span>3350 Greenbriar Pkwy SW, Atlanta, GA 30331</span></p>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Service</th><th>Where</th><th>Phone</th></tr></thead>
+          <tbody>
+            <tr><td>Hospital</td><td>Southern Regional Medical<span class="sub2">11 Upper Riverdale Rd SW, Riverdale, GA 30274</span><span class="sub2">7.5 mi · 12–15 min</span></td><td class="num"><a href="tel:7709918000">770-991-8000</a></td></tr>
+            <tr><td>Trauma Center</td><td>Grady Memorial Hospital<span class="sub2">80 Jesse Hill Jr. Dr SE, Atlanta, GA 30303</span><span class="sub2">9.5 mi · 15–20 min</span></td><td class="num"><a href="tel:4046161000">404-616-1000</a></td></tr>
+            <tr><td>Fire / EMS</td><td>Atlanta Fire, Station 9<span class="sub2">3501 MLK Jr. Dr SW, Atlanta, GA 30331</span><span class="sub2">1.2 mi · 3–5 min</span></td><td class="num"><a href="tel:4045467000">404-546-7000</a></td></tr>
+            <tr><td>Police</td><td>Atlanta Police, Zone 4<span class="sub2">1125 Cascade Cir SW, Atlanta, GA 30311</span><span class="sub2">4.5 mi · 8–12 min</span></td><td class="num"><a href="tel:311">311</a><span class="sub2">or</span><a href="tel:4046586666">404-658-6666</a></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Color Codes</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Color</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip" style="background:#d32f2f"></span>Red</td><td>Fire Emergency</td></tr>
+            <tr><td><span class="chip" style="background:#f57c00"></span>Orange</td><td>Disruptive or Combative Person</td></tr>
+            <tr><td><span class="chip" style="background:#fbc02d"></span>Yellow</td><td>Suspicious Person</td></tr>
+            <tr><td><span class="chip" style="background:#388e3c"></span>Green</td><td>Cash or Offering Escort</td></tr>
+            <tr><td><span class="chip" style="background:#1976d2"></span>Blue</td><td>Medical Emergency</td></tr>
+            <tr><td><span class="chip" style="background:#9e9e9e"></span>Grey</td><td>Severe Weather</td></tr>
+            <tr><td><span class="chip" style="background:#ffffff"></span>White</td><td>Soft Lockdown or Lockout</td></tr>
+            <tr><td><span class="chip" style="background:#ec6fa6"></span>Pink</td><td>Missing or Lost Child</td></tr>
+            <tr><td><span class="chip" style="background:#111111"></span>Black</td><td>911: Respond quickly and call LEO</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Radio Channels</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Ch</th><th>Team</th><th>Range</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Parking Lot</td><td>Short</td></tr>
+            <tr><td class="num">2</td><td>Formation Kids</td><td>Short</td></tr>
+            <tr><td class="num">3</td><td>Welcome Team</td><td>Short</td></tr>
+            <tr><td class="num">4</td><td>On The Line</td><td>Short</td></tr>
+            <tr><td class="num">5</td><td>Medical</td><td>Short</td></tr>
+            <tr><td class="num">6</td><td>Merch Team</td><td>Short</td></tr>
+            <tr><td class="num">7</td><td>Ushers</td><td>Short</td></tr>
+            <tr><td class="num">8</td><td>Facilities</td><td>Short</td></tr>
+            <tr class="ab-row"><td class="num">9</td><td><b>Armor Bearers</b></td><td><span class="long">Long</span></td></tr>
+            <tr><td class="num">10</td><td>2819 Teens</td><td>Short</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Radio Phrases</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Say</th><th>Means</th></tr></thead>
+          <tbody>
+            <tr><td>Over</td><td>Finished speaking. Please respond.</td></tr>
+            <tr><td>Go Ahead</td><td>Send your message.</td></tr>
+            <tr><td>Copy</td><td>Message received and understood.</td></tr>
+            <tr><td>Say Again</td><td>Retransmit your message.</td></tr>
+            <tr><td>Standby</td><td>Message received, but please wait.</td></tr>
+            <tr><td>Affirmative</td><td>Yes.</td></tr>
+            <tr><td>Negative</td><td>No.</td></tr>
+            <tr><td>Do you copy?</td><td>Do you understand?</td></tr>
+            <tr><td>Unreadable</td><td>Can't understand. Broken or garbled transmission.</td></tr>
+            <tr><td>Disregard</td><td>Don't pay attention to last message.</td></tr>
+            <tr><td>Out</td><td>Clear radio transmission. Conversation over.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel" style="grid-column:1/-1">
+        <h3>Threat Levels</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Level</th><th>What you see</th><th>Response</th></tr></thead>
+          <tbody>
+            <tr><td><span class="lvl" style="background:#5b8f6a">1</span></td><td><b>Curious, but calm</b></td><td>Observe, engage gently, offer help, and build rapport.</td></tr>
+            <tr><td><span class="lvl" style="background:#8a9a3c">2</span></td><td><b>Rule Breaker</b></td><td>Address behavior respectfully, set limits, stay calm, and de-escalate if pushback increases.</td></tr>
+            <tr><td><span class="lvl" style="background:#c99a1e">3</span></td><td><b>Verbally Disruptive</b></td><td>Engage with clear, calm verbal de-escalation. Ask to step aside and talk while monitoring body language.</td></tr>
+            <tr><td><span class="lvl" style="background:#d0731f">4</span></td><td><b>Threatening or Aggressive</b></td><td>Maintain distance. Keep low and calm tone. Signal/call for backup. Try to defuse, but be ready to disengage or call LEO.</td></tr>
+            <tr><td><span class="lvl" style="background:#c0392b">5</span></td><td><b>Actively Dangerous</b></td><td>Disengage if possible. Secure the safety of others. Call LEO and engage physically only if necessary, trained, and justified.</td></tr>
+            <tr><td><span class="lvl" style="background:#7b1d1d">6</span></td><td><b>Active Assailant</b></td><td>Use active shooter protocol, move to cover or concealment. Notify LEO and stop the threat if capable and trained to do so.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+    </div>
   </section>
 
   <p class="foot">Crossed-out dates are cancelled for a holiday: 5 Monday SWOTs, the Jan 2, Jul 3, and Sep 4 team meetings, and Access on Thanksgiving (Nov 25).</p>
