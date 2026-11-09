@@ -143,6 +143,25 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ebtn{margin-left:auto;align-self:center;background:var(--summit);color:#fff;border:0;border-radius:8px;padding:8px 16px;font:700 15px var(--body);cursor:pointer;white-space:nowrap}
 .ebtn:hover{filter:brightness(1.08)}
 .ebtn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.ebtn-m{display:none}
+.due{grid-template-columns:auto minmax(0,1fr) !important}
+.due .dot{align-self:start;margin-top:7px}
+.dtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dact{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:10px}
+.due .dact .btn{margin-top:0}
+.calbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.calbar h2{margin:0}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 18px;border-radius:7px;font:600 14px var(--body);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+#cal-list{display:grid;gap:10px}
+.reqd{padding:0}
+.reqd summary{list-style:none;cursor:pointer;padding:14px 18px;font:700 17px var(--body);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.reqd summary::-webkit-details-marker{display:none}
+.reqd summary::after{content:"+";font:600 22px var(--body);color:var(--muted)}
+.reqd[open] summary::after{content:"−"}
+.reqd .reqs{padding:0 18px 18px}
 dialog#emerg{border:0;border-radius:14px;padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 .em{padding:20px;display:grid;gap:14px}
@@ -182,9 +201,30 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 @media (max-width:640px){
   .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);border-bottom:0;padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));gap:2px;overflow:visible}
   .tab{flex:1;text-align:center;padding:10px 2px;font-size:12px}
-  .ebtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));margin:0;box-shadow:0 2px 10px rgba(0,0,0,.25);z-index:21}
+  .tabs .ebtn{display:none}
+  .ebtn-m{display:inline-flex !important;margin:0;padding:8px 14px;font-size:14px}
+  .wrap{padding-block:0 24px;gap:16px}
+  [data-view]{gap:16px}
+  header{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px;border-bottom:1px solid var(--line)}
+  header .eyebrow{display:none}
+  header h1{font-size:24px}
+  [data-view="home"]{display:flex;flex-direction:column}
+  [data-view="home"] .dash-cols{display:contents}
+  #next-up{order:1} #due-panel{order:2} section[aria-labelledby="up-h"]{order:3} #tiles{order:4} section[aria-labelledby="sbh-h"]{order:5} .serm{order:6} .sync{order:7} .upd2{order:8}
+  .wkp{display:none}
+  .filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .filt{white-space:nowrap}
+  .rt.stack thead,.rt.stack2 thead{display:none}
+  .rt.stack tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .rt.stack tr:last-child{border-bottom:0}
+  .rt.stack td{border:0;padding:0}
+  .rt.stack td:nth-child(2){grid-column:1/-1;grid-row:2;font-weight:400}
+  .rt.stack td:nth-child(3){grid-column:2;grid-row:1;text-align:right}
+  .rt.stack2 tr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .rt.stack2 tr:last-child{border-bottom:0}
+  .rt.stack2 td{border:0;padding:0}
+  .rt.stack2 td:nth-child(3){grid-column:2}
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
-  header{padding-right:112px}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tile .big{font-size:36px}
   header .sub{display:none}
@@ -305,6 +345,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     <div class="eyebrow">Armor Bearers · <span id="updated">Updated Nov 9, 2026</span></div>
     <h1>AB Dashboard</h1>
     <p class="sub">What's coming up, what's due, every event, training, the reference guide, and our SOPs, all in one place.</p>
+    <button class="ebtn ebtn-m" type="button" aria-haspopup="dialog">Emergency</button>
   </header>
 
   <nav class="tabs" aria-label="Dashboard sections">
@@ -420,9 +461,16 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <p style="font-size:13px">Button not working? Copy the link and paste it into your calendar app under “Add calendar → From URL” (or “Subscribe”).</p>
       <p style="font-size:13px"><b>Tip:</b> put this dashboard on your phone's home screen so it opens like an app. iPhone: tap Share, then Add to Home Screen. Android: tap the ⋮ menu, then Add to Home screen.</p>
     </section>
+    <p class="foot upd2" id="upd2"></p>
   </div>
 
   <div data-view="calendar" hidden>
+  <div class="calbar"><h2>Calendar</h2><div class="seg" role="group" aria-label="Calendar view"><button type="button" data-cv="list" aria-pressed="true">List</button><button type="button" data-cv="month" aria-pressed="false">Month</button></div></div>
+  <section class="panel" id="cal-list" aria-label="Upcoming events list">
+    <label class="chk" style="white-space:normal"><input type="checkbox" id="show-swot"> Show weekly SWOTs (every Monday, 7pm on Zoom)</label>
+    <ol class="up" id="agenda"></ol>
+  </section>
+  <div id="cal-months" style="display:grid;gap:28px" hidden>
   <div class="legend" aria-label="Legend">
     <div class="lg"><span class="sw s-summit"></span>AB Summit</div>
     <div class="lg"><span class="sw s-all"></span>Key Dates <small>(All Hands) = every AB serves</small></div>
@@ -446,6 +494,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   </section>
 
   <p class="foot">Crossed-out dates are cancelled for a holiday: 5 Monday SWOTs, the Jan 2, Jul 3, and Sep 4 team meetings, and Access on Thanksgiving (Nov 25).</p>
+  </div>
   </div>
 
   <div data-view="playbook" hidden>
@@ -478,7 +527,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <div class="panel">
         <h3>Emergency Services</h3>
         <p class="addr">Church<span>3350 Greenbriar Pkwy SW, Atlanta, GA 30331</span></p>
-        <div class="tw"><table class="rt">
+        <div class="tw"><table class="rt stack">
           <thead><tr><th>Service</th><th>Where</th><th>Phone</th></tr></thead>
           <tbody>
             <tr><td>Hospital</td><td>Southern Regional Medical<span class="sub2">11 Upper Riverdale Rd SW, Riverdale, GA 30274</span><span class="sub2">7.5 mi · 12–15 min</span></td><td class="num"><a href="tel:7709918000">770-991-8000</a></td></tr>
@@ -548,7 +597,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 
       <div class="panel" style="grid-column:1/-1">
         <h3>Threat Levels</h3>
-        <div class="tw"><table class="rt">
+        <div class="tw"><table class="rt stack2">
           <thead><tr><th>Level</th><th>What you see</th><th>Response</th></tr></thead>
           <tbody>
             <tr><td><span class="lvl" style="background:#5b8f6a">1</span></td><td><b>Curious, but calm</b></td><td>Observe, engage gently, offer help, and build rapport.</td></tr>
@@ -675,7 +724,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <p class="intro">Weekly to-dos for every AB. Check them off as you go. Your checkmarks are saved on this device and reset each week.</p>
     </div>
     <div class="dues" id="due-list"></div>
-    <section class="panel" aria-labelledby="wk-h" style="display:grid;gap:12px">
+    <section class="panel wkp" aria-labelledby="wk-h" style="display:grid;gap:12px">
       <h2 id="wk-h" style="margin:0;font-size:20px">This week at a glance</h2>
       <div class="wk7" id="due-week"></div>
     </section>
@@ -686,14 +735,14 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <h2>Training Opportunities</h2>
       <p class="intro">Outside classes you can sign up for. Each one shows which yearly AB requirements it covers.</p>
     </div>
-    <section class="panel" aria-labelledby="req-h" style="display:grid;gap:12px">
-      <h2 id="req-h" style="margin:0;font-size:20px">Yearly AB requirements</h2>
+    <details class="panel reqd" id="reqd">
+      <summary><span id="req-h">What counts toward yearly requirements</span></summary>
       <div class="reqs">
         <div class="req"><b><span class="dot" style="--c:var(--summit)"></span>Firearms</b><span>A Pistol 2 or Pistol 3 level course (intermediate or advanced defensive shooting). Pistol 1 / beginner classes don't count.</span></div>
         <div class="req"><b><span class="dot" style="--c:var(--meet)"></span>First Aid / CPR</b><span>A First Aid, CPR, and AED class with a certificate, such as American Heart Association Heartsaver or American Red Cross.</span></div>
         <div class="req"><b><span class="dot" style="--c:var(--outing)"></span>Stop the Bleed</b><span>Stop the Bleed or an equivalent bleeding-control course approved by the Security Director.</span></div>
       </div>
-    </section>
+    </details>
     <div class="filters" role="group" aria-label="Show classes that meet">
       <button class="filt" type="button" data-f="all" aria-pressed="true">All</button>
       <button class="filt" type="button" data-f="how" aria-pressed="false">House of Worship</button>
@@ -804,7 +853,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   // ---------- Due soon ----------
   const DUE=[
     {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)",link:"https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform",cta:"Submit SWOT analysis"},
-    {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)",link:"https://2819church.churchcenter.com/me",cta:"Open my schedule in Church Center"},
+    {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)",link:"https://2819church.churchcenter.com/me",cta:"Open Church Center"},
     {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)",link:"https://2819church.churchcenter.com/people/forms/982537",cta:"Register in Church Center"}
   ];
   const ymd=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
@@ -815,7 +864,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   const renderDue=()=>{
     const items=DUE.map(x=>Object.assign({due:nextDue(x.wd)},x)).sort((a,b)=>a.due-b.due);
     items.forEach(x=>x.done=isDone(x.id,x.due));
-    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><h3>'+x.t+'</h3><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div>'+(x.link?'<a class="btn" href="'+x.link+'" target="_blank" rel="noopener">'+x.cta+' ↗</a>':'')+'</div>'+pill(x.due,x.done)+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div>').join('');
+    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><div class="dtop"><h3>'+x.t+'</h3>'+pill(x.due,x.done)+'</div><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div><div class="dact">'+(x.link?'<a class="btn" href="'+x.link+'" target="_blank" rel="noopener">'+x.cta+' ↗</a>':'')+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div></div></div>').join('');
     document.getElementById("due-home").innerHTML=items.map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+(x.link?'<a href="'+x.link+'" target="_blank" rel="noopener">'+x.short+'</a>':x.short)+'</span>'+pill(x.due,x.done)+'</li>').join('');
     const ws=wkStart(now);let wk="";
     for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const today=+d===+day0(now);
@@ -824,6 +873,22 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     document.querySelectorAll("#due-list input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{const it=items.find(x=>x.id===cb.dataset.id);setDone(it.id,it.due,cb.checked);renderDue();const n=document.getElementById("due-"+it.id);if(n)n.focus();}));
   };
   renderDue();
+
+  // ---------- Calendar list view ----------
+  const ag=document.getElementById("agenda"),sw=document.getElementById("show-swot");
+  const renderAgenda=()=>{let h="",last="";
+    EV.filter(e=>e.e>now&&(sw.checked||e.type!=="swot")).forEach(e=>{const mk=e.s.getFullYear()+"-"+e.s.getMonth();
+      if(mk!==last){h+='<li class="wk">'+M[e.s.getMonth()]+' '+e.s.getFullYear()+'</li>';last=mk;}
+      h+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.s.getDate()+'</b><span>'+MS[e.s.getMonth()]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
+    ag.innerHTML=h||'<li><div></div><div class="us">Nothing coming up.</div></li>';};
+  sw.addEventListener("change",renderAgenda);renderAgenda();
+  const setCV=v=>{document.getElementById("cal-list").hidden=v!=="list";document.getElementById("cal-months").hidden=v!=="month";
+    document.querySelectorAll("[data-cv]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cv===v?"true":"false"));try{localStorage.setItem("ab-cv",v);}catch(e){}};
+  document.querySelectorAll("[data-cv]").forEach(b=>b.addEventListener("click",()=>setCV(b.dataset.cv)));
+  let cv0=null;try{cv0=localStorage.getItem("ab-cv");}catch(e){}
+  setCV(cv0==="month"||cv0==="list"?cv0:"list");
+  if(innerWidth>640)document.getElementById("reqd").open=true;
+  document.getElementById("upd2").textContent=document.getElementById("updated").textContent;
 
   // ---------- Training ----------
   // To add a class: copy one block below and fill it in. meets: true = counts toward that yearly requirement.
@@ -897,7 +962,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics"};
   const dlg=document.getElementById("emerg");
   const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
-  document.getElementById("ebtn").addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}});
+  document.querySelectorAll(".ebtn").forEach(b=>b.addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}}));
   document.getElementById("em-close").addEventListener("click",closeE);
   dlg.addEventListener("click",e=>{if(e.target===dlg)closeE();});
   const route=(scroll)=>{let v=location.hash.slice(1);let sop=null,target=null;
