@@ -131,7 +131,7 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
   for(let m=0;m<12;m++){let c=0;for(let d=1;d<=31;d++){if(new Date(Y,m,d).getDay()===4&&++c===4){access[m]=d;break;}}}
   const outingMonths={2:"Q1",5:"Q2",8:"Q3",11:"Q4"};
   const outingDay={2:20,5:12,8:18,11:11};
-  const tbd={6:["Baptism?"],7:["Baptism?"],9:["National Access · Sat TBD"]};
+  const tbd={7:["Baptism · Date TBD"],9:["National Access · Sat TBD"]};
   const holidayMon={[key(0,18)]:"MLK Day",[key(1,15)]:"Presidents' Day",[key(4,31)]:"Memorial Day",[key(6,5)]:"July 4th (observed)",[key(8,6)]:"Labor Day"};
   const meetFlags={0:"New Year's weekend",6:"July 4th weekend",8:"Labor Day weekend"};
 
@@ -145,13 +145,13 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
   const col=(title,items)=>{const c=document.createElement("div");c.innerHTML="<h3>"+title+"</h3><ul>"+items.join("")+"</ul>";keys.appendChild(c);};
   col("AB Summit",['<li><span class="d">'+fmt(0,30)+'</span><span>Annual Summit</span></li>']);
   col("Key Dates",Object.keys(keyDays).map(k=>k.split("-").map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(([m,d])=>'<li><span class="d">'+fmt(m,d)+'</span><span>'+keyDays[key(m,d)]+'</span></li>'));
-  col("Team Meetings · 10am–2pm",Object.keys(meets).map(m=>{m=+m;return meetFlags[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,meets[m])+'</span><span><span class="cx">Cancelled</span> · '+meetFlags[m]+'</span></li>':'<li><span class="d">'+fmt(m,meets[m])+'</span></li>';}));
+  col("Team Meetings · 10am–2pm",Object.keys(meets).filter(m=>!meetFlags[m]).map(m=>'<li><span class="d">'+fmt(+m,meets[m])+'</span></li>'));
   col("Quarterly Outings",Object.keys(outingMonths).map(m=>{m=+m;return '<li><span class="d">'+fmt(m,outingDay[m])+'</span><span>'+outingMonths[m]+' · <span class="tent">Tentative</span></span></li>';}));
   col("Access · 4th Thursday · 7pm",[].concat(Object.keys(access).map(m=>{m=+m;return accessCancel[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,access[m])+'</span><span><span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></li>':'<li><span class="d">'+fmt(m,access[m])+'</span></li>';})));
-  col("Dates Not Confirmed",['<li><span class="d">Jan 11–16</span><span>Consecration Week · church-wide fast</span></li>','<li><span class="d">Jul or Aug</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
+  col("Dates Not Confirmed",['<li><span class="d">Jan 11–16</span><span>Consecration Week · church-wide fast</span></li>','<li><span class="d">August</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
   let swotCount=0; const holList=[];
-  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){swotCount++; if(holidayMon[key(m,d)]) holList.push('<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,d)+'</span><span><span class="cx">Cancelled</span> · '+holidayMon[key(m,d)]+'</span></li>');}}}
-  col("Monday SWOTs · 7pm",['<li><span class="d">'+(swotCount-holList.length)+' SWOTs</span><span>Jan 4 – Dec 27</span></li>'].concat(holList));
+  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){swotCount++; if(holidayMon[key(m,d)]) holList.push('<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,d)+'</span><span><span class="cx">Cancelled · Holiday</span> ('+holidayMon[key(m,d)]+')</span></li>');}}}
+  col("Monday SWOTs · 7pm",['<li><span class="d">'+(swotCount-holList.length)+' SWOTs</span><span>Jan 4 – Dec 27</span></li>','<li style="color:var(--muted);font-size:13px;margin-top:4px">No SWOT on these holiday Mondays:</li>'].concat(holList));
 
   // Month grids
   const wrap=document.getElementById("months");
@@ -167,7 +167,7 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
       else if(keyDays[k]){cls+=" keyday";label+=": "+keyDays[k];notes.push('<div><span class="sw s-all"></span><span><b>'+MS[m]+' '+d+'</b> '+keyDays[k]+'</span></div>');}
       else if(access[m]===d){cls+=" access"; if(accessCancel[m]){cls+=" acx";label+=": Access cancelled ("+accessCancel[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--access)"></span><span><b>'+MS[m]+' '+d+'</b> Access <span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></div>');} else {label+=": Access 7pm, mostly virtual";notes.push('<div><span class="sw s-access"></span><span><b>'+MS[m]+' '+d+'</b> Access, 7pm · virtual unless announced</span></div>');}}
       else if(meets[m]===d){cls+=" meet"; if(meetFlags[m]){cls+=" mcx";label+=": Team Meeting cancelled ("+meetFlags[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--meet)"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting <span class="cx">Cancelled</span> · '+meetFlags[m]+'</span></div>');} else {label+=": Team Meeting 10am to 2pm";notes.push('<div><span class="sw s-meet"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting, 10am–2pm</span></div>');}}
-      else if(wd===1){cls+=" swot";label+=": SWOT 7pm"; if(holidayMon[k]){cls+=" hol";label=fmt(m,d)+": SWOT cancelled ("+holidayMon[k]+")";notes.push('<div><span class="sw s-cancel"></span><span><b>'+MS[m]+' '+d+'</b> SWOT <span class="cx">Cancelled</span> · '+holidayMon[k]+'</span></div>');}}
+      else if(wd===1){cls+=" swot";label+=": SWOT 7pm"; if(holidayMon[k]){cls+=" hol";label=fmt(m,d)+": SWOT cancelled, holiday ("+holidayMon[k]+")";notes.push('<div><span class="sw s-cancel"></span><span><b>'+MS[m]+' '+d+'</b> SWOT <span class="cx">Cancelled · Holiday</span> ('+holidayMon[k]+')</span></div>');}}
       if(m===0&&d>=11&&d<=16){cls+=" fast";label+=" · Consecration Week (tentative)"; if(d===11) notes.push('<div><span class="sw s-fast"></span><span><b>Jan 11–16</b> Consecration Week · church-wide fast · <span class="tent" style="color:var(--fast)">Tentative</span></span></div>');}
       cells+='<div class="'+cls+'" title="'+label+'" aria-label="'+label+'">'+d+'</div>';
     }
