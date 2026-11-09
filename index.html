@@ -209,6 +209,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .dh{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .dh li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-weight:600;font-size:14px}
 .dh li.isdone span:nth-child(2){text-decoration:line-through;color:var(--muted)}
+.due .btn{margin-top:8px;padding:7px 12px;font-size:13px}
+.dh a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.dh a:hover{color:var(--meet);text-decoration-color:var(--meet)}
 .tgroup.hw .tgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
 .side{display:grid;gap:16px;min-width:0}
 .res{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -680,9 +683,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   // ---------- Due soon ----------
   const DUE=[
-    {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)"},
-    {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)"},
-    {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)"}
+    {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)",link:"https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform",cta:"Submit SWOT analysis"},
+    {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)",link:"https://2819church.churchcenter.com/me",cta:"Open my schedule in Church Center"},
+    {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)",link:"https://2819church.churchcenter.com/people/forms/982537",cta:"Register in Church Center"}
   ];
   const ymd=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
   const nextDue=wd=>{const d=day0(now);d.setDate(d.getDate()+((wd-d.getDay()+7)%7));return d;};
@@ -692,8 +695,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   const renderDue=()=>{
     const items=DUE.map(x=>Object.assign({due:nextDue(x.wd)},x)).sort((a,b)=>a.due-b.due);
     items.forEach(x=>x.done=isDone(x.id,x.due));
-    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><h3>'+x.t+'</h3><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div></div>'+pill(x.due,x.done)+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div>').join('');
-    document.getElementById("due-home").innerHTML=items.map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+x.short+'</span>'+pill(x.due,x.done)+'</li>').join('');
+    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><h3>'+x.t+'</h3><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div>'+(x.link?'<a class="btn" href="'+x.link+'" target="_blank" rel="noopener">'+x.cta+' ↗</a>':'')+'</div>'+pill(x.due,x.done)+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div>').join('');
+    document.getElementById("due-home").innerHTML=items.map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+(x.link?'<a href="'+x.link+'" target="_blank" rel="noopener">'+x.short+'</a>':x.short)+'</span>'+pill(x.due,x.done)+'</li>').join('');
     const ws=wkStart(now);let wk="";
     for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const today=+d===+day0(now);
       wk+='<div class="wd'+(today?' now':'')+'"><b>'+DW[d.getDay()]+'</b><span class="n">'+d.getDate()+'</span>'+DUE.filter(x=>x.wd===d.getDay()).map(x=>'<span class="wchip'+(isDone(x.id,d)?' done':'')+'" style="--c:'+x.c+'">'+x.short+'</span>').join('')+'</div>';}
