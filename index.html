@@ -199,6 +199,60 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .due .dact .btn{margin-top:0}
 .calbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .calbar h2{margin:0}
+.cfilt{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 4px;margin:-2px}
+.cfilt::-webkit-scrollbar{display:none}
+.cfilt button{flex:none;display:inline-flex;align-items:center;gap:6px;font:600 13px var(--body);padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.cfilt button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cfilt button:focus-visible,.mbtn:focus-visible,.mtoday:focus-visible,.mc:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.agenda{display:grid}
+.amh{position:sticky;top:var(--stick,0px);z-index:3;background:var(--bg);padding:16px 0 8px;font:700 13px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--brass);border-bottom:2px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.amh small{font:600 12px var(--body);letter-spacing:0;text-transform:none;color:var(--muted)}
+.anote{font-size:13px;color:var(--muted);padding:10px 0 0;display:flex;gap:8px;align-items:center}
+.aday{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.adate{text-align:center;line-height:1.1;padding-top:2px}
+.adate small{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.adate b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;font:700 24px/1 var(--display);font-variant-numeric:tabular-nums}
+.aday.today .adate b{background:var(--brass);color:#fff}
+.aday.today .adate small{color:var(--brass)}
+.aevs{display:grid;gap:8px;min-width:0}
+.aev{border-left:4px solid var(--c);background:var(--surface);border-radius:8px;padding:9px 12px;display:grid;gap:2px;min-width:0;box-shadow:0 1px 0 var(--line)}
+.aev .at{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.aev .an{font-weight:700;font-size:16px;line-height:1.25}
+.aev .as{font-size:13px;color:var(--muted)}
+.aev.off{background:transparent;border-left-style:dashed}
+.aev.off .an{text-decoration:line-through;color:var(--muted)}
+.aev .cx2{font-size:12px;font-weight:700;color:var(--summit)}
+.aev .zm{justify-self:start;margin-top:6px;display:inline-flex;align-items:center;gap:6px;font:700 13px var(--body);padding:6px 12px;border-radius:999px;background:var(--meet);color:#fff;text-decoration:none}
+.aev .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--brass-soft);color:var(--brass);margin-left:6px;vertical-align:2px}
+.aempty{padding:24px 0;color:var(--muted);text-align:center}
+.calm{display:grid;gap:12px;width:100%;max-width:760px}
+.mnav{display:flex;align-items:center;gap:8px}
+.mnav b{flex:1;text-align:center;font:700 22px var(--display);letter-spacing:.02em}
+.mbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:24px;line-height:1;cursor:pointer}
+.mbtn:disabled{opacity:.35;cursor:default}
+.mtoday{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 13px var(--body);padding:8px 12px;border-radius:999px;cursor:pointer}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.mgrid .dw{font-size:11px;font-weight:700;text-align:center;color:var(--muted);padding:4px 0;letter-spacing:.06em}
+.mc{border:0;background:transparent;color:var(--ink);border-radius:10px;min-height:52px;padding:6px 0 4px;display:grid;justify-items:center;align-content:start;gap:4px;font:600 15px var(--body);cursor:pointer;font-variant-numeric:tabular-nums}
+.mc.blank{cursor:default}
+.mc .dots{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.mc .dots i{width:6px;height:6px;border-radius:50%;background:var(--c)}
+.mc .dots i.x{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.mc.past{color:var(--muted)}
+.mc.today>span{background:var(--brass);color:#fff;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}
+.mc.sel{background:var(--ink);color:var(--bg)}
+.mc.sel.today>span{background:transparent;color:inherit}
+.mc.fast{background:color-mix(in srgb,var(--fast) 12%,transparent)}
+.mc.sel.fast{background:var(--ink)}
+.mleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;font-weight:600;color:var(--muted)}
+.mleg span{display:inline-flex;align-items:center;gap:6px}
+.mleg i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.mleg i.x{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.mleg i.sq{width:14px;height:10px;border-radius:3px;background:color-mix(in srgb,var(--c) 22%,transparent)}
+.mday{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.mday h3{margin:0;font-size:14px;letter-spacing:.04em}
+.kd summary{cursor:pointer;font:700 15px var(--body)}
 .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
 .seg button{border:0;background:transparent;padding:7px 18px;border-radius:7px;font:600 14px var(--body);color:var(--muted);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
@@ -248,7 +302,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 .minilinks a{color:var(--meet);font-weight:600}
 @media (max-width:640px){
   .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);border-bottom:0;padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));gap:2px;overflow:visible}
-  .tab{flex:1;text-align:center;padding:10px 2px;font-size:12px}
+  .tab{flex:1 1 auto;text-align:center;padding:10px 3px;font-size:12px;letter-spacing:-.01em}
   .tabs .ebtn{display:none}
   .ebtn-m{display:inline-flex !important;margin:0;padding:8px 14px;font-size:14px}
   .wrap{padding-block:0 24px;gap:16px}
@@ -402,6 +456,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     <a class="tab" href="#calendar" data-tab="calendar">Calendar</a>
     <a class="tab" href="#training" data-tab="training">Training</a>
     <a class="tab" href="#playbook" data-tab="playbook">Playbook</a>
+    <a class="tab" href="#sops" data-tab="sops">SOPs</a>
     <a class="tab" href="#faq" data-tab="faq">FAQ</a>
     <button class="ebtn" type="button" id="ebtn" aria-haspopup="dialog">Emergency</button>
   </nav>
@@ -520,35 +575,37 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   </div>
 
   <div data-view="calendar" hidden>
-  <div class="calbar"><h2>Calendar</h2><div class="seg" role="group" aria-label="Calendar view"><button type="button" data-cv="list" aria-pressed="true">List</button><button type="button" data-cv="month" aria-pressed="false">Month</button></div></div>
-  <section class="panel" id="cal-list" aria-label="Upcoming events list">
-    <label class="chk" style="white-space:normal"><input type="checkbox" id="show-swot"> Show each SWOT on its own line (every Monday, 7pm on Zoom)</label>
-    <ol class="up" id="agenda"></ol>
-  </section>
-  <div id="cal-months" style="display:grid;gap:28px" hidden>
-  <div class="legend" aria-label="Legend">
-    <div class="lg"><span class="sw s-summit"></span>AB Summit</div>
-    <div class="lg"><span class="sw s-all"></span>Key Dates <small>(All Hands) = every AB serves</small></div>
-    <div class="lg"><span class="sw s-meet"></span>Team Meeting <small>1st Sat · 10am–2pm</small></div>
-    <div class="lg"><span class="sw s-swot"></span>SWOT <small>Mondays · 7pm</small></div>
-    <div class="lg"><span class="sw s-access"></span>Access <small>4th Thu · 7pm · mostly virtual</small></div>
-    <div class="lg"><span class="sw s-fast"></span>Consecration Week <small>church-wide fast · tentative</small></div>
-    <div class="lg"><span class="sw s-tbd"></span>Date TBD <small>shown as a month tag</small></div>
-    <div class="lg"><span class="sw s-cancel"></span>Cancelled <small>holiday</small></div>
-    <div class="lg"><span class="sw s-outing"></span>Quarterly Outing <small>tentative</small></div>
+  <div class="calbar"><h2>Calendar</h2><div class="seg" role="group" aria-label="Calendar view"><button type="button" data-cv="list" aria-pressed="true">Agenda</button><button type="button" data-cv="month" aria-pressed="false">Month</button></div></div>
+  <div class="cfilt" id="cfilt" role="group" aria-label="Show these events">
+    <button type="button" data-f="all" aria-pressed="true">All</button>
+    <button type="button" data-f="swot" aria-pressed="false"><span class="dot" style="--c:var(--swot)"></span>SWOTs</button>
+    <button type="button" data-f="meet" aria-pressed="false"><span class="dot" style="--c:var(--meet)"></span>Team meetings</button>
+    <button type="button" data-f="key" aria-pressed="false"><span class="dot" style="--c:var(--brass)"></span>Key dates</button>
+    <button type="button" data-f="access" aria-pressed="false"><span class="dot" style="--c:var(--access)"></span>Access</button>
+    <button type="button" data-f="outing" aria-pressed="false"><span class="dot" style="--c:var(--outing)"></span>Outings</button>
   </div>
-
-  <section class="panel">
-    <h2>Key dates at a glance</h2>
-    <div class="keys" id="keys"></div>
+  <section id="cal-list" aria-label="Agenda">
+    <div class="agenda" id="agenda"></div>
   </section>
-
-  <section>
-    <h2>Month by month</h2>
-    <div class="months" id="months"></div>
+  <section id="cal-months" class="panel calm" aria-label="Month view" hidden>
+    <div class="mnav"><button type="button" class="mbtn" id="m-prev" aria-label="Previous month">&lsaquo;</button><b id="m-title" aria-live="polite"></b><button type="button" class="mbtn" id="m-next" aria-label="Next month">&rsaquo;</button><button type="button" class="mtoday" id="m-today">Today</button></div>
+    <div class="mgrid" id="mgrid" role="grid"></div>
+    <div class="mleg" aria-label="Legend">
+      <span><i style="--c:var(--summit)"></i>AB Summit</span>
+      <span><i style="--c:var(--brass)"></i>Key Dates</span>
+      <span><i style="--c:var(--meet)"></i>Team Meeting</span>
+      <span><i style="--c:var(--swot)"></i>SWOT</span>
+      <span><i style="--c:var(--access)"></i>Access</span>
+      <span><i style="--c:var(--outing)"></i>Team Outing</span>
+      <span><i class="sq" style="--c:var(--fast)"></i>Consecration Week</span>
+      <span><i class="x" style="--c:var(--muted)"></i>Cancelled</span>
+    </div>
+    <div class="mday" id="mday" aria-live="polite"></div>
   </section>
-
-  <p class="foot">Crossed-out dates are cancelled for a holiday: 5 Monday SWOTs, the Jan 2, Jul 3, and Sep 4 team meetings, and Access on Thanksgiving (Nov 25).</p>
+  <details class="panel kd">
+    <summary>Key dates at a glance</summary>
+    <div class="keys" id="keys" style="margin-top:14px"></div>
+  </details>
   </div>
   </div>
 
@@ -669,7 +726,8 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     </div>
   </section>
 
-    <section aria-labelledby="sop-h" style="display:grid;gap:20px">
+    <div id="sop-slot" hidden></div>
+    <section id="sop-sec" aria-labelledby="sop-h" style="display:grid;gap:20px">
       <div>
         <h2 id="sop-h">SOPs</h2>
         <p class="intro">The key steps from each SOP in the AB Playbook. Tap one to open it. After any incident: file an incident report and debrief with the team.</p>
@@ -773,6 +831,8 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       </div>
     </section>
   </div>
+
+  <div data-view="sops" id="sops-home" hidden></div>
 
   <div data-view="faq" hidden>
     <section class="panel ask" aria-labelledby="ask-h">
@@ -1028,20 +1088,66 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   };
   renderDue();
 
-  // ---------- Calendar list view ----------
-  const ag=document.getElementById("agenda"),sw=document.getElementById("show-swot");
-  const renderAgenda=()=>{let h="",last="";
-    const up=EV.filter(e=>e.e>now).sort((a,b)=>a.s-b.s),seen=new Set();
-    up.forEach(e=>{const mk=e.s.getFullYear()+"-"+e.s.getMonth();
-      if(e.type==="swot"&&!sw.checked){if(seen.has(mk))return;seen.add(mk);
-        const ms=up.filter(x=>x.type==="swot"&&x.s.getFullYear()+"-"+x.s.getMonth()===mk);
-        const on=ms.filter(x=>!x.off).map(x=>x.s.getDate()),off=ms.filter(x=>x.off).map(x=>MS[x.s.getMonth()]+" "+x.s.getDate()+(x.off?" ("+((x.off.match(/\(([^)]+)\)/)||[,x.off])[1])+")":""));
-        if(mk!==last){h+='<li class="wk">'+M[e.s.getMonth()]+' '+e.s.getFullYear()+'</li>';last=mk;}
-        h+='<li><div class="ud"><span>Mon</span><b>'+(on[0]||e.s.getDate())+'</b><span>'+MS[e.s.getMonth()]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:var(--swot)"></span><span>SWOTs '+(on.length?'· '+MS[e.s.getMonth()]+' '+on.join(', '):'')+'</span></div><div class="us">Mondays · 7pm · Zoom'+(off.length?' · <span class="cx">No SWOT '+esc(off.join(', '))+'</span>':'')+'</div></div></li>';return;}
-      if(mk!==last){h+='<li class="wk">'+M[e.s.getMonth()]+' '+e.s.getFullYear()+'</li>';last=mk;}
-      h+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.s.getDate()+'</b><span>'+MS[e.s.getMonth()]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
-    ag.innerHTML=h||'<li><div></div><div class="us">Nothing coming up.</div></li>';};
-  sw.addEventListener("change",renderAgenda);renderAgenda();
+  // ---------- Calendar: agenda + month ----------
+  const isAllDay=e=>e.s.getHours()===0&&e.s.getMinutes()===0&&(e.e-e.s)%864e5===0;
+  const hr=x=>{let h=x.getHours(),m=x.getMinutes();const ap=h<12?"am":"pm";h=h%12||12;return h+(m?":"+String(m).padStart(2,"0"):"")+ap;};
+  const fmtT=e=>{if(isAllDay(e)){const n=Math.round((e.e-e.s)/864e5);return n>1?"All week · "+MS[e.s.getMonth()]+" "+e.s.getDate()+"–"+new Date(e.e-1).getDate():"All day";}
+    const a=hr(e.s),b=hr(e.e);return (a.slice(-2)===b.slice(-2)?a.slice(0,-2):a)+"–"+b;};
+  const subOf=e=>String(e.sub||"").replace(/^\s*\d{1,2}(:\d\d)?\s*(am|pm)?(\s*[–-]\s*\d{1,2}(:\d\d)?\s*(am|pm))?\s*(·\s*)?/i,"").replace(/Church-wide fast · Jan 11–16 · Tentative/,"Church-wide fast · Tentative");
+  const TBD2={7:"Baptism · date TBD",9:"National Access · a Saturday, date TBD"};
+  let CF="all";try{CF=localStorage.getItem("ab-cf")||"all";}catch(e){}
+  const pass=e=>CF==="all"||e.type===CF||(CF==="key"&&(e.type==="summit"||e.type==="fast"));
+  const evCard=e=>{const off=!!e.off,why=off?(e.off.match(/\(([^)]+)\)/)||[,e.off.replace(/^Cancelled\s*·\s*/,"")])[1]:"";
+    const tag=e.ah?'<span class="tag">All Hands</span>':/Tentative/.test(e.sub||"")?'<span class="tag" style="background:var(--surface);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)">Tentative</span>':"";
+    const sub=subOf(e).replace(/·?\s*Tentative\s*$/,"").replace(/^Tentative$/,"");
+    return '<div class="aev'+(off?' off':'')+'" style="--c:'+e.c+'"><span class="at">'+fmtT(e)+'</span><span class="an">'+esc(e.t)+tag+'</span>'+
+      (off?'<span class="cx2">Cancelled'+(why?' · '+esc(why):'')+'</span>':(sub?'<span class="as">'+esc(sub)+'</span>':''))+
+      (e.zoom&&!off?'<a class="zm" href="'+ZOOM+'" target="_blank" rel="noopener">Join on Zoom</a>':'')+'</div>';};
+  const sameDay=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+  const ag=document.getElementById("agenda");
+  const renderAgenda=()=>{const list=EV.filter(e=>e.e>now&&pass(e));let h="",lastM="",lastD="",open=false;
+    list.forEach(e=>{const y=e.s.getFullYear(),m=e.s.getMonth(),mk=y+"-"+m,dk=mk+"-"+e.s.getDate();
+      if(mk!==lastM){if(open){h+='</div></div>';open=false;}const n=list.filter(x=>x.s.getFullYear()===y&&x.s.getMonth()===m&&!x.off).length;
+        h+='<div class="amh"><span>'+M[m]+' '+y+'</span><small>'+n+' event'+(n===1?'':'s')+'</small></div>'+(y===Y&&TBD2[m]&&(CF==="all"||CF==="key")?'<div class="anote"><span class="dot" style="--c:var(--muted)"></span>'+TBD2[m]+'</div>':'');lastM=mk;lastD="";}
+      if(dk!==lastD){if(open)h+='</div></div>';const t=sameDay(e.s,now)||(e.s<now);
+        h+='<div class="aday'+(t?' today':'')+'"><div class="adate"><small>'+(t?'Today':DW[e.s.getDay()])+'</small><b>'+e.s.getDate()+'</b></div><div class="aevs">';open=true;lastD=dk;}
+      h+=evCard(e);});
+    if(open)h+='</div></div>';
+    ag.innerHTML=h||'<p class="aempty">Nothing coming up for this filter.</p>';};
+
+  // Month view
+  const firstM=new Date(2026,10,1),lastMo=new Date(Y,11,1);
+  let vm=new Date(now.getFullYear(),now.getMonth(),1);if(vm<firstM)vm=new Date(firstM);if(vm>lastMo)vm=new Date(lastMo);
+  let sel=day0(now);if(sel<firstM)sel=new Date(firstM);
+  const onDay=d=>{const a=d,b=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);return EV.filter(e=>pass(e)&&e.s<b&&e.e>a);};
+  const renderDay=()=>{const evs=onDay(sel);document.getElementById("mday").innerHTML='<h3>'+DW[sel.getDay()]+', '+M[sel.getMonth()]+' '+sel.getDate()+(sameDay(sel,now)?' · Today':'')+'</h3>'+(evs.length?evs.map(evCard).join(""):'<p class="as" style="margin:0;color:var(--muted)">Nothing scheduled.</p>');};
+  const renderMonth=()=>{const y=vm.getFullYear(),m=vm.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();
+    document.getElementById("m-title").textContent=M[m]+" "+y;
+    document.getElementById("m-prev").disabled=vm<=firstM;document.getElementById("m-next").disabled=vm>=lastMo;
+    let h=DW.map(d=>'<div class="dw">'+d[0]+'</div>').join("");for(let i=0;i<first;i++)h+='<div class="mc blank" aria-hidden="true"></div>';
+    for(let d=1;d<=n;d++){const dt=new Date(y,m,d),evs=onDay(dt);const fast=evs.some(e=>e.type==="fast");
+      const dots=evs.filter(e=>e.type!=="fast").slice(0,4).map(e=>'<i class="'+(e.off?'x':'')+'" style="--c:'+e.c+'"></i>').join("");
+      const lbl=M[m]+" "+d+(evs.length?": "+evs.map(e=>e.t+(e.off?" (cancelled)":"")).join(", "):"");
+      h+='<button type="button" role="gridcell" class="mc'+(dt<day0(now)?' past':'')+(sameDay(dt,now)?' today':'')+(sameDay(dt,sel)?' sel':'')+(fast?' fast':'')+'" data-d="'+d+'" aria-label="'+esc(lbl)+'" aria-selected="'+sameDay(dt,sel)+'"><span>'+d+'</span><span class="dots">'+dots+'</span></button>';}
+    const g=document.getElementById("mgrid");g.innerHTML=h;
+    g.querySelectorAll(".mc[data-d]").forEach(b=>b.addEventListener("click",()=>{sel=new Date(y,m,+b.dataset.d);renderMonth();}));
+    renderDay();};
+  const step=k=>{const t=new Date(vm.getFullYear(),vm.getMonth()+k,1);if(t<firstM||t>lastMo)return;vm=t;sel=sameDay(new Date(t.getFullYear(),t.getMonth(),1),new Date(now.getFullYear(),now.getMonth(),1))?day0(now):new Date(t);renderMonth();};
+  document.getElementById("m-prev").addEventListener("click",()=>step(-1));
+  document.getElementById("m-next").addEventListener("click",()=>step(1));
+  document.getElementById("m-today").addEventListener("click",()=>{vm=new Date(now.getFullYear(),now.getMonth(),1);if(vm<firstM)vm=new Date(firstM);sel=day0(now);renderMonth();});
+  let tx=null;const gEl=document.getElementById("mgrid");
+  gEl.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},{passive:true});
+  gEl.addEventListener("touchend",e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>50)step(dx<0?1:-1);},{passive:true});
+
+  const renderCal=()=>{renderAgenda();renderMonth();};
+  document.querySelectorAll("#cfilt button").forEach(b=>{b.setAttribute("aria-pressed",b.dataset.f===CF?"true":"false");
+    b.addEventListener("click",()=>{CF=b.dataset.f;try{localStorage.setItem("ab-cf",CF);}catch(e){}document.querySelectorAll("#cfilt button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderCal();});});
+  renderCal();
+  const setStick=()=>{const hd=document.querySelector("header"),tb=document.querySelector(".tabs");let v=0;
+    if(hd&&getComputedStyle(hd).position==="sticky")v=hd.offsetHeight;else if(tb&&getComputedStyle(tb).position==="sticky")v=tb.offsetHeight;
+    document.documentElement.style.setProperty("--stick",v+"px");};
+  setStick();addEventListener("resize",setStick);
   const setCV=v=>{document.getElementById("cal-list").hidden=v!=="list";document.getElementById("cal-months").hidden=v!=="month";
     document.querySelectorAll("[data-cv]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cv===v?"true":"false"));try{localStorage.setItem("ab-cv",v);}catch(e){}};
   document.querySelectorAll("[data-cv]").forEach(b=>b.addEventListener("click",()=>setCV(b.dataset.cv)));
@@ -1142,20 +1248,21 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   document.getElementById("askf").addEventListener("submit",e=>{e.preventDefault();renderS();askq.blur();});
 
   // ---------- Tabs ----------
-  const VIEWS=["home","due","calendar","training","playbook","faq"];
-  const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics",gear:"sunday-gear"};
+  const VIEWS=["home","due","calendar","training","playbook","sops","faq"];
+  const ALIAS={reference:"quick-reference",basics:"sunday-basics",gear:"sunday-gear"};
   const dlg=document.getElementById("emerg");
   const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
   document.querySelectorAll(".ebtn").forEach(b=>b.addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}}));
   document.getElementById("em-close").addEventListener("click",closeE);
   dlg.addEventListener("click",e=>{if(e.target===dlg)closeE();});
   const route=(scroll)=>{let v=location.hash.slice(1);let sop=null,target=null;
-    if(/^sop-/.test(v)){sop=document.getElementById(v);target=sop;v="playbook";}
+    if(/^sop-/.test(v)){sop=document.getElementById(v);target=sop;v="sops";}
     else if(ALIAS[v]){target=document.getElementById(ALIAS[v]);v="playbook";}
     else if(/^faq-/.test(v)){sop=document.getElementById(v);target=sop;v="faq";}
     else if(v==="ask"){v="faq";setTimeout(()=>{const i=document.getElementById("askq");i.focus();},60);}
     if(!VIEWS.includes(v))v="home";
     closeE();
+    const sec=document.getElementById("sop-sec");if(v==="sops")document.getElementById("sops-home").appendChild(sec);else{const sl=document.getElementById("sop-slot");sl.after(sec);}
     document.querySelectorAll("[data-view]").forEach(el=>el.hidden=el.dataset.view!==v);
     document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
     if(sop)sop.open=true;
@@ -1164,35 +1271,6 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   window.addEventListener("hashchange",()=>route(true));
   route(false);
 
-  // Month grids
-  const wrap=document.getElementById("months");
-  [10,11].forEach(m=>{const y=2026,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
-    for(let i=0;i<first;i++)cells+='<div></div>';
-    for(let d=1;d<=n;d++){const wd=new Date(y,m,d).getDay();const lbl=MS[m]+" "+d+", 2026"+(wd===1?": SWOT 7pm on Zoom":"");cells+='<div class="day'+(wd===1?' swot':'')+'" title="'+lbl+'" aria-label="'+lbl+'">'+d+'</div>';}
-    const el=document.createElement("article");el.className="month";
-    el.innerHTML='<div class="mh"><b>'+M[m]+' 2026</b></div><div class="grid">'+cells+'</div><div class="notes"><div><span class="sw s-swot"></span><span>SWOTs every Monday at 7pm on Zoom. No team meeting or outing this month.</span></div></div>';
-    wrap.appendChild(el);});
-  for(let m=0;m<12;m++){
-    const first=new Date(Y,m,1).getDay(), n=new Date(Y,m+1,0).getDate();
-    let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
-    for(let i=0;i<first;i++) cells+='<div></div>';
-    const notes=[];
-    for(let d=1;d<=n;d++){
-      const k=key(m,d), wd=new Date(Y,m,d).getDay(); let cls="day", label=fmt(m,d);
-      if(k===summit){cls+=" summit";label+=": AB Summit";notes.push('<div><span class="sw s-summit"></span><span><b>'+MS[m]+' '+d+'</b> AB Summit</span></div>');}
-      else if(outingDay[m]===d){cls+=" outing";label+=": "+outingMonths[m]+" Outing (tentative)";notes.push('<div><span class="sw s-outing"></span><span><b>'+MS[m]+' '+d+'</b> '+outingMonths[m]+' Outing · <span class="tent">Tentative</span></span></div>');}
-      else if(keyDays[k]){cls+=" keyday";label+=": "+keyDays[k];notes.push('<div><span class="sw s-all"></span><span><b>'+MS[m]+' '+d+'</b> '+keyDays[k]+'</span></div>');}
-      else if(access[m]===d){cls+=" access"; if(accessCancel[m]){cls+=" acx";label+=": Access cancelled ("+accessCancel[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--access)"></span><span><b>'+MS[m]+' '+d+'</b> Access <span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></div>');} else {label+=": Access 7pm, mostly virtual";notes.push('<div><span class="sw s-access"></span><span><b>'+MS[m]+' '+d+'</b> Access, 7pm · virtual unless announced</span></div>');}}
-      else if(meets[m]===d){cls+=" meet"; if(meetFlags[m]){cls+=" mcx";label+=": Team Meeting cancelled ("+meetFlags[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--meet)"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting <span class="cx">Cancelled</span> · '+meetFlags[m]+'</span></div>');} else {label+=": Team Meeting 10am to 2pm";notes.push('<div><span class="sw s-meet"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting, 10am–2pm</span></div>');}}
-      else if(wd===1){cls+=" swot";label+=": SWOT 7pm"; if(holidayMon[k]){cls+=" hol";label=fmt(m,d)+": SWOT cancelled, holiday ("+holidayMon[k]+")";notes.push('<div><span class="sw s-cancel"></span><span><b>'+MS[m]+' '+d+'</b> SWOT <span class="cx">Cancelled · Holiday</span> ('+holidayMon[k]+')</span></div>');}}
-      if(m===0&&d>=11&&d<=16){cls+=" fast";label+=" · Consecration Week (tentative)"; if(d===11) notes.push('<div><span class="sw s-fast"></span><span><b>Jan 11–16</b> Consecration Week · church-wide fast · <span class="tent" style="color:var(--fast)">Tentative</span></span></div>');}
-      cells+='<div class="'+cls+'" title="'+label+'" aria-label="'+label+'">'+d+'</div>';
-    }
-    const el=document.createElement("article");el.className="month";
-    const tb=(tbd[m]||[]).map(t=>'<span class="badge tbd">'+t+'</span>').join('');
-    el.innerHTML='<div class="mh"><b>'+M[m]+'</b><span class="badges">'+tb+(outingMonths[m]?'<span class="badge">'+outingMonths[m]+' Outing · '+MS[m]+' '+outingDay[m]+'</span>':'')+'</span></div><div class="grid">'+cells+'</div>'+(notes.length?'<div class="notes">'+notes.join("")+'</div>':'');
-    wrap.appendChild(el);
-  }
 })();
 </script>
 
