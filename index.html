@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="theme-color" content="#1b2333">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AB Dashboard">
 <title>AB Calendar 2027</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -133,7 +139,57 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tile .big small{font:600 15px var(--body);color:var(--muted);margin-left:4px}
 .tile .dt{color:var(--muted);font-size:14px}
 .dash-cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start}
-@media (max-width:760px){.dash-cols{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.dash-cols{display:flex;flex-direction:column;gap:16px}.dash-cols>.side{display:contents}#due-panel{order:-1}}
+.ebtn{margin-left:auto;align-self:center;background:var(--summit);color:#fff;border:0;border-radius:8px;padding:8px 16px;font:700 15px var(--body);cursor:pointer;white-space:nowrap}
+.ebtn:hover{filter:brightness(1.08)}
+.ebtn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+dialog#emerg{border:0;border-radius:14px;padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
+.em{padding:20px;display:grid;gap:14px}
+.em-top{display:flex;justify-content:space-between;align-items:center}
+.em-top h2{margin:0;color:var(--summit);font-size:28px}
+.em-x{background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--ink);font:600 15px var(--body);padding:6px 12px;cursor:pointer}
+.em-911{display:block;text-align:center;background:var(--summit);color:#fff;text-decoration:none;font:700 30px/1 var(--display);letter-spacing:.06em;padding:16px;border-radius:10px}
+.em-addr{margin:-4px 0 0;font-size:14px;color:var(--muted)}
+.em-addr b{color:var(--ink)}
+.em h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.em-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:480px){.em-grid{grid-template-columns:minmax(0,1fr)}}
+.em-ch{background:var(--meet-soft);border-radius:10px;padding:10px 14px;text-align:center}
+.em-ch b{display:block;font:700 30px/1 var(--display);color:var(--meet)}
+.em-ch span{font-size:12px;color:var(--muted)}
+.em-ph{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+.em-ph li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.em-ph a{color:var(--meet);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.em-codes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:6px;font-size:13px}
+.em-codes div{display:flex;align-items:center;gap:8px}
+.em-codes b{min-width:52px}
+.em-sops{display:flex;flex-wrap:wrap;gap:8px}
+.sb{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.sb .panel{display:grid;gap:8px;align-content:start}
+.sb h3{margin:0;font:700 20px var(--display);letter-spacing:.02em}
+.sbt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:14px}
+.sbt dt{font-weight:700;font-variant-numeric:tabular-nums}
+.sbt dd{margin:0}
+.sb ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.pbnav{display:flex;flex-wrap:wrap;gap:8px}
+.basics{display:grid;gap:10px;font-size:14px}
+.basics .row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px}
+.basics .row b{font-weight:700}
+.basics .row span{color:var(--muted)}
+.minilinks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.minilinks a{color:var(--meet);font-weight:600}
+@media (max-width:640px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);border-bottom:0;padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));gap:2px;overflow:visible}
+  .tab{flex:1;text-align:center;padding:10px 2px;font-size:12px}
+  .ebtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));margin:0;box-shadow:0 2px 10px rgba(0,0,0,.25);z-index:21}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  header{padding-right:112px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tile .big{font-size:36px}
+  header .sub{display:none}
+  .em-codes{grid-template-columns:minmax(0,1fr)}
+}
 .dash-cols .panel{display:grid;gap:12px;min-width:0}
 .dash-cols h2{margin:0}
 .up{list-style:none;margin:0;padding:0;display:grid}
@@ -237,7 +293,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .rule.red{background:var(--summit-soft)}
 .lvlrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:start}
 @media (prefers-reduced-motion:reduce){.sop summary::after{transition:none}}
-@media (max-width:420px){.next{grid-template-columns:minmax(0,1fr)}.dateblock{width:88px}}
+@media (max-width:420px){.next{gap:14px;align-items:start}.dateblock{width:72px}.db-d{font-size:38px}.db-m{font-size:12px}}
 @media (max-width:420px){.panel{padding:14px}}
 </style>
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
@@ -246,7 +302,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Armor Bearers · 2027</div>
+    <div class="eyebrow">Armor Bearers · <span id="updated">Updated Nov 9, 2026</span></div>
     <h1>AB Dashboard</h1>
     <p class="sub">What's coming up, what's due, every event, training, the reference guide, and our SOPs, all in one place.</p>
   </header>
@@ -256,9 +312,52 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <a class="tab" href="#due" data-tab="due">Due Soon</a>
     <a class="tab" href="#calendar" data-tab="calendar">Calendar</a>
     <a class="tab" href="#training" data-tab="training">Training</a>
-    <a class="tab" href="#reference" data-tab="reference">Reference Guide</a>
-    <a class="tab" href="#sops" data-tab="sops">SOPs</a>
+    <a class="tab" href="#playbook" data-tab="playbook">Playbook</a>
+    <button class="ebtn" type="button" id="ebtn" aria-haspopup="dialog">Emergency</button>
   </nav>
+
+  <dialog id="emerg" aria-labelledby="em-h">
+    <div class="em">
+      <div class="em-top"><h2 id="em-h">Emergency</h2><button class="em-x" type="button" id="em-close">Close</button></div>
+      <a class="em-911" href="tel:911">CALL 911</a>
+      <p class="em-addr">Give dispatch this address: <b>3350 Greenbriar Pkwy SW, Atlanta, GA 30331</b></p>
+      <div class="em-grid">
+        <div class="em-ch"><b>CH 9</b><span>AB radio · long range</span></div>
+        <div>
+          <h3>Phones</h3>
+          <ul class="em-ph">
+            <li><span>Fire / EMS · Station 9</span><a href="tel:4045467000">404-546-7000</a></li>
+            <li><span>Police · Zone 4</span><a href="tel:4046586666">404-658-6666</a></li>
+            <li><span>Southern Regional Medical</span><a href="tel:7709918000">770-991-8000</a></li>
+            <li><span>Grady (trauma)</span><a href="tel:4046161000">404-616-1000</a></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Color codes</h3>
+        <div class="em-codes">
+          <div><span class="chip" style="background:#d32f2f"></span><b>Red</b>Fire</div>
+          <div><span class="chip" style="background:#f57c00"></span><b>Orange</b>Disruptive person</div>
+          <div><span class="chip" style="background:#fbc02d"></span><b>Yellow</b>Suspicious person</div>
+          <div><span class="chip" style="background:#388e3c"></span><b>Green</b>Cash escort</div>
+          <div><span class="chip" style="background:#1976d2"></span><b>Blue</b>Medical</div>
+          <div><span class="chip" style="background:#9e9e9e"></span><b>Grey</b>Severe weather</div>
+          <div><span class="chip" style="background:#ffffff"></span><b>White</b>Lockdown / lockout</div>
+          <div><span class="chip" style="background:#ec6fa6"></span><b>Pink</b>Missing child</div>
+          <div><span class="chip" style="background:#111111"></span><b>Black</b>911, call LEO</div>
+        </div>
+      </div>
+      <div>
+        <h3>SOPs</h3>
+        <div class="em-sops">
+          <a class="btn" href="#sop-active-shooter">Active Shooter</a>
+          <a class="btn" href="#sop-medical">Medical</a>
+          <a class="btn" href="#sop-missing-child">Missing Child</a>
+          <a class="btn" href="#sop-fire">Fire</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
   <div data-view="home">
     <section class="panel next" id="next-up" aria-label="Next up"></section>
@@ -270,6 +369,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <ol class="up" id="up-list"></ol>
         <div><a class="btn" href="#calendar">See the full calendar</a></div>
       </section>
+        <!-- SERMON:START -->
         <section class="panel serm" aria-labelledby="serm-h">
           <div class="eyebrow" id="serm-h">Latest sermon · Sun, Nov 1</div>
           <div><h3>Prayer In Christ</h3><p class="meta">IN CHRIST series · Ephesians 1:15–23 · Milton James</p></div>
@@ -283,23 +383,24 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           <div><a class="btn primary" href="https://www.youtube.com/watch?v=81Z9hdcMZAQ" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>
           <p class="ainote">Summary written by AI. Watch the full message for everything that was said.</p>
         </section>
+        <!-- SERMON:END -->
       </div>
       <div class="side">
-        <section class="panel" aria-labelledby="dueh-h">
+        <section class="panel" id="due-panel" aria-labelledby="dueh-h">
           <h2 id="dueh-h">Due this week</h2>
           <ul class="dh" id="due-home"></ul>
           <div><a class="btn" href="#due">Open Due Soon</a></div>
         </section>
-        <section class="panel" aria-labelledby="res-h">
-          <h2 id="res-h">Resources</h2>
-          <ul class="res">
-            <li><a href="#training">Training Opportunities <span>Classes that count</span></a></li>
-            <li><a href="#reference">Reference Guide <span>Codes, channels, phones</span></a></li>
-            <li><a href="#sop-active-shooter">Active Shooter <span>SOP</span></a></li>
-            <li><a href="#sop-medical">Medical Emergency <span>SOP</span></a></li>
-            <li><a href="#sop-missing-child">Missing Child <span>SOP</span></a></li>
-            <li><a href="#sops">All 7 SOPs <span>→</span></a></li>
-          </ul>
+        <section class="panel" aria-labelledby="sbh-h" style="display:grid;gap:12px">
+          <h2 id="sbh-h">Sunday basics</h2>
+          <div class="basics">
+            <div class="row"><b>Team A</b><span>Arrive 6:00am · briefing 6:45</span></div>
+            <div class="row"><b>Team B</b><span>Arrive 9:15am · briefing 9:35</span></div>
+            <div class="row"><b>Wear</b><span>All black top, black or dark gray pants, black boots or sneakers</span></div>
+            <div class="row"><b>Late?</b><span>15+ min late, check in with a team lead before taking a post</span></div>
+            <div class="row"><b>Out?</b><span>Tell leadership by Friday at noon</span></div>
+          </div>
+          <div class="minilinks"><a href="#basics">Full Sunday basics</a><a href="#reference">Reference Guide</a><a href="#sops">SOPs</a><a href="#training">Training</a></div>
         </section>
       </div>
     </div>
@@ -317,6 +418,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <button class="btn" id="copy-feed" type="button">Copy link</button>
       </div>
       <p style="font-size:13px">Button not working? Copy the link and paste it into your calendar app under “Add calendar → From URL” (or “Subscribe”).</p>
+      <p style="font-size:13px"><b>Tip:</b> put this dashboard on your phone's home screen so it opens like an app. iPhone: tap Share, then Add to Home Screen. Android: tap the ⋮ menu, then Add to Home screen.</p>
     </section>
   </div>
 
@@ -346,7 +448,28 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <p class="foot">Crossed-out dates are cancelled for a holiday: 5 Monday SWOTs, the Jan 2, Jul 3, and Sep 4 team meetings, and Access on Thanksgiving (Nov 25).</p>
   </div>
 
-  <div data-view="reference" hidden>
+  <div data-view="playbook" hidden>
+  <div>
+    <h2>Playbook</h2>
+    <p class="intro">Everything an AB needs on a Sunday, from the AB Playbook.</p>
+  </div>
+  <nav class="pbnav" aria-label="Playbook sections">
+    <a class="btn" href="#basics">Sunday Basics</a>
+    <a class="btn" href="#reference">Reference Guide</a>
+    <a class="btn" href="#sops">SOPs</a>
+  </nav>
+
+  <section id="sunday-basics" aria-labelledby="sb-h" style="display:grid;gap:14px">
+    <h2 id="sb-h">Sunday Basics</h2>
+    <p class="intro">Serve at least 2 of 4 Sundays a month. On your Sundays, serve 2 of the 3 gatherings unless leadership approves otherwise.</p>
+    <div class="sb">
+      <div class="panel"><h3>Team A · Early</h3><dl class="sbt"><dt>6:00am</dt><dd>Arrive</dd><dt>6:15am</dt><dd>Perimeter checks (20 min)</dd><dt>6:40am</dt><dd>Pray-in</dd><dt>6:45am</dt><dd>Team briefing</dd><dt>7:15am</dt><dd>Radio check</dd></dl></div>
+      <div class="panel"><h3>Team B · Mid-morning</h3><dl class="sbt"><dt>9:15am</dt><dd>Arrive</dd><dt>9:30am</dt><dd>Pray-in</dd><dt>9:35am</dt><dd>Team briefing</dd><dt>9:40am</dt><dd>Radio check</dd></dl></div>
+      <div class="panel"><h3>Uniform</h3><ul><li>All black top, minimal logo</li><li>Black or dark gray pants or shorts</li><li>Black tactical boots or sneakers</li></ul></div>
+      <div class="panel"><h3>Late or out</h3><ul><li>Arriving after your call time counts as tardy.</li><li>15+ minutes late: check in with a team lead before taking a post.</li><li>Can't serve? Tell leadership by Friday at 12pm.</li><li>Up to 3 unexcused tardies and 2 unexcused absences per 3 months.</li></ul></div>
+    </div>
+  </section>
+
   <section id="quick-reference" aria-labelledby="qr-h">
     <h2 id="qr-h">Reference Guide</h2>
     <p class="intro" style="margin-bottom:14px">The AB pocket guide: who to call, what the codes mean, and how to talk on the radio.</p>
@@ -441,9 +564,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     </div>
   </section>
 
-  </div>
-
-  <div data-view="sops" hidden>
     <section aria-labelledby="sop-h" style="display:grid;gap:20px">
       <div>
         <h2 id="sop-h">SOPs</h2>
@@ -773,13 +893,22 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   renderT("all");
 
   // ---------- Tabs ----------
-  const VIEWS=["home","due","calendar","training","reference","sops"];
-  const route=(scroll)=>{let v=location.hash.slice(1);let sop=null;
-    if(/^sop-/.test(v)){sop=document.getElementById(v);v="sops";}
+  const VIEWS=["home","due","calendar","training","playbook"];
+  const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics"};
+  const dlg=document.getElementById("emerg");
+  const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
+  document.getElementById("ebtn").addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}});
+  document.getElementById("em-close").addEventListener("click",closeE);
+  dlg.addEventListener("click",e=>{if(e.target===dlg)closeE();});
+  const route=(scroll)=>{let v=location.hash.slice(1);let sop=null,target=null;
+    if(/^sop-/.test(v)){sop=document.getElementById(v);target=sop;v="playbook";}
+    else if(ALIAS[v]){target=document.getElementById(ALIAS[v]);v="playbook";}
     if(!VIEWS.includes(v))v="home";
+    closeE();
     document.querySelectorAll("[data-view]").forEach(el=>el.hidden=el.dataset.view!==v);
     document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
-    if(sop){sop.open=true;sop.scrollIntoView({block:"start"});window.scrollBy(0,-70);}
+    if(sop)sop.open=true;
+    if(target){target.scrollIntoView({block:"start"});window.scrollBy(0,innerWidth>640?-70:-16);}
     else if(scroll)window.scrollTo(0,0);};
   window.addEventListener("hashchange",()=>route(true));
   route(false);

@@ -67,8 +67,12 @@ def fold(line):
 events = []
 
 
-def add(uid, summary, start, end=None, hours=None, desc=None, free=False, tentative=False):
+def add(uid, summary, start, end=None, hours=None, desc=None, free=False, tentative=False, rrule=None, url=None):
     lines = ["BEGIN:VEVENT", f"UID:{uid}@ab-calendar", f"DTSTAMP:{STAMP}", f"SUMMARY:{esc(summary)}"]
+    if rrule:
+        lines.append(f"RRULE:{rrule}")
+    if url:
+        lines.append(f"URL:{url}")
     if hours:
         (h1, m1), (h2, m2) = hours
         lines.append(f"DTSTART;TZID={TZ}:{start:%Y%m%d}T{h1:02d}{m1:02d}00")
@@ -125,6 +129,18 @@ while d.year <= Y:
     else:
         add(f"swot-{d:%Y%m%d}", "AB SWOT (Zoom)", d, hours=((19, 0), (20, 0)), desc=SWOT_DESC)
     d += timedelta(weeks=1)
+
+# Weekly due reminders (all-day, don't block time), Nov 2026 through Dec 2027
+DUE = [
+    ("due-swot", "Due: Submit SWOT analysis", date(2026, 11, 9), "MO",
+     "https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform"),
+    ("due-assign", "Due: Accept your weekly AB assignment (by end of day)", date(2026, 11, 10), "TU",
+     "https://2819church.churchcenter.com/me"),
+    ("due-fk", "Due: Register kids for Formation Kids (by end of day)", date(2026, 11, 11), "WE",
+     "https://2819church.churchcenter.com/people/forms/982537"),
+]
+for uid, title, first, day, link in DUE:
+    add(uid, title, first, rrule=f"FREQ=WEEKLY;BYDAY={day};UNTIL=20271231", url=link, desc=f"Do it here: {link}")
 
 # Access: fourth Thursday, 7pm
 for m in range(1, 13):

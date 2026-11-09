@@ -1,0 +1,932 @@
+<title>AB Calendar 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: header + legend, key-dates list, then a 12-month grid of mini calendars (3 cols desktop, 1 on phone) */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#1b2333; --muted:#5f6878; --line:#d9dde4;
+  --summit:#b8352b; --meet:#1f5fa8; --swot:#7a8596; --outing:#2f7d4f; --brass:#a87b22;
+  --summit-soft:#f8e3e1; --meet-soft:#e2ecf8; --outing-soft:#e3f1e8; --swot-soft:#eceef2;
+  --access:#6b4fa0; --access-soft:#ece6f6; --brass-soft:#f5ecd8; --fast:#0e7c86;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161e; --surface:#1b212c; --ink:#e7eaf0; --muted:#9aa3b2; --line:#2c3442;
+  --summit:#ef6b60; --meet:#6aa5ec; --swot:#8d97a8; --outing:#5cc18a; --brass:#d6a64a;
+  --summit-soft:#3a1f1e; --meet-soft:#1c2c42; --outing-soft:#1a3326; --swot-soft:#252c38;
+  --access:#b39ae6; --access-soft:#2a2340; --brass-soft:#3a2f17; --fast:#4fc3cc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161e; --surface:#1b212c; --ink:#e7eaf0; --muted:#9aa3b2; --line:#2c3442;
+  --summit:#ef6b60; --meet:#6aa5ec; --swot:#8d97a8; --outing:#5cc18a; --brass:#d6a64a;
+  --summit-soft:#3a1f1e; --meet-soft:#1c2c42; --outing-soft:#1a3326; --swot-soft:#252c38;
+  --access:#b39ae6; --access-soft:#2a2340; --brass-soft:#3a2f17; --fast:#4fc3cc; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:1100px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+header{display:grid;gap:6px}
+.eyebrow{font-family:var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:700;font-size:14px}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,52px);line-height:1;margin:0;font-weight:700;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02em}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px}
+.lg{display:flex;align-items:center;gap:8px;font-weight:600}
+.sw{width:14px;height:14px;border-radius:3px;flex:none}
+.s-summit{background:var(--summit)} .s-meet{background:var(--meet)} .s-outing{background:var(--outing)}
+.s-swot{background:transparent;border:2px solid var(--swot)}
+.lg small{color:var(--muted);font-weight:400}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.keys h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 8px;color:var(--muted)}
+.keys ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-variant-numeric:tabular-nums}
+.keys li{display:flex;gap:10px;align-items:baseline}
+.keys .d{min-width:92px;font-weight:600}
+.flag{font-size:12px;color:var(--brass);font-weight:600}
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.month{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 14px 16px;min-width:0}
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.mh b{font-family:var(--display);font-size:22px;letter-spacing:.03em}
+.badge{font-size:12px;font-weight:700;background:var(--outing-soft);color:var(--outing);padding:2px 8px;border-radius:99px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;font-variant-numeric:tabular-nums}
+.dow{font-size:11px;color:var(--muted);font-weight:700;padding-bottom:2px}
+.day{aspect-ratio:1;max-width:100%;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:14px;position:relative}
+.day.swot{border:2px solid var(--swot);background:var(--swot-soft)}
+.day.swot.hol{border-style:dashed;background:transparent;color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--summit)}
+.day.meet.mcx{background:transparent;color:var(--muted);border:2px dashed var(--meet);font-weight:600;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--summit)}
+.day.allhands{background:var(--brass);color:#fff;font-weight:700}
+.s-all{background:var(--brass)}
+.day.keyday{background:var(--brass);color:#fff;font-weight:700}
+.day.access{background:var(--access-soft);border:2px solid var(--access);color:var(--access);font-weight:700}
+.day.access.acx{background:transparent;border-style:dashed;color:var(--muted);font-weight:600;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--summit)}
+.s-key{background:var(--brass-soft);border:2px solid var(--brass)}
+.s-access{background:var(--access-soft);border:2px solid var(--access)}
+.day.outing{background:var(--outing);color:#fff;font-weight:700;outline:2px dotted var(--outing);outline-offset:2px}
+.tent{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--outing)}
+.badge.tbd{background:transparent;color:var(--muted);border:1.5px dashed var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.s-tbd{background:transparent;border:2px dashed var(--muted)}
+.day.fast::after{content:"";position:absolute;left:3px;right:3px;bottom:3px;height:4px;border-radius:2px;background:var(--fast)}
+.s-fast{background:var(--fast);height:5px;width:16px;border-radius:2px}
+.s-cancel{background:transparent;border:2px dashed var(--swot)}
+.cx{font-size:12px;font-weight:700;color:var(--summit);text-transform:uppercase;letter-spacing:.06em}
+.day.meet{background:var(--meet);color:#fff;font-weight:700}
+.day.summit{background:var(--summit);color:#fff;font-weight:700}
+.notes{margin-top:10px;display:grid;gap:3px;font-size:13px}
+.notes div{display:flex;gap:8px;align-items:baseline}
+.notes .sw{width:10px;height:10px}
+.foot{color:var(--muted);font-size:13px}
+.sync{display:grid;gap:12px}
+.sync h2{margin:0}
+.sync p{margin:0;color:var(--muted);max-width:62ch}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;border:1.5px solid var(--meet);color:var(--meet);background:transparent;font:600 14px var(--body);text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--meet-soft)}
+.btn.primary{background:var(--meet);color:#fff}
+.btn.primary:hover{filter:brightness(1.08);background:var(--meet)}
+.btn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.feed{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.feed code{font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;overflow-wrap:anywhere;user-select:all;min-width:0}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.ref .panel{min-width:0}
+.ref h3{font-family:var(--display);font-size:20px;letter-spacing:.03em;margin:0 0 10px}
+.tw{overflow-x:auto}
+.rt{width:100%;border-collapse:collapse;font-size:14px}
+.rt th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:0 8px 6px 0;border-bottom:1px solid var(--line)}
+.rt td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rt tr:last-child td{border-bottom:0}
+.rt td:first-child{font-weight:700;white-space:nowrap}
+.rt .num{font-variant-numeric:tabular-nums}
+.rt .sub2{display:block;color:var(--muted);font-size:13px;font-weight:400}
+.rt a{color:var(--meet);font-weight:600;white-space:nowrap}
+.chip{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid var(--line);margin-right:8px;vertical-align:-1px}
+.lvl{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-weight:700;color:#fff}
+.long{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brass)}
+.ab-row td{background:var(--meet-soft)}
+.addr{margin:0 0 10px;font-weight:600}
+.addr span{display:block;color:var(--muted);font-weight:400;font-size:13px}
+[data-view]{display:grid;gap:28px;min-width:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding-block:10px;border-bottom:1px solid var(--line);margin-top:-14px;overflow-x:auto}
+.tab{padding:8px 14px;border-radius:8px;font:600 15px var(--body);color:var(--muted);text-decoration:none;white-space:nowrap}
+.tab:hover{color:var(--ink);background:var(--surface)}
+.tab[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.tab:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.next{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center}
+.dateblock{width:104px;border-radius:12px;overflow:hidden;text-align:center;border:1px solid var(--line);background:var(--bg)}
+.db-m{background:var(--c);color:#fff;font:700 14px var(--display);letter-spacing:.16em;padding:5px 0;text-transform:uppercase}
+.db-d{font:700 52px/1 var(--display);padding:8px 0 2px;font-variant-numeric:tabular-nums}
+.db-w{font-size:12px;color:var(--muted);padding-bottom:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.next h2{font-size:clamp(28px,5vw,38px);margin:2px 0 4px;line-height:1.05}
+.next .meta{color:var(--muted);margin:0}
+.when{display:inline-block;margin-top:10px;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;background:var(--meet-soft);color:var(--meet)}
+.when.today{background:var(--summit);color:#fff}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:2px;min-width:0}
+.tile .lab{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.tile .big{font:700 44px/1.05 var(--display);font-variant-numeric:tabular-nums;margin-top:6px}
+.tile .big small{font:600 15px var(--body);color:var(--muted);margin-left:4px}
+.tile .dt{color:var(--muted);font-size:14px}
+.dash-cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.dash-cols{display:flex;flex-direction:column;gap:16px}.dash-cols>.side{display:contents}#due-panel{order:-1}}
+.ebtn{margin-left:auto;align-self:center;background:var(--summit);color:#fff;border:0;border-radius:8px;padding:8px 16px;font:700 15px var(--body);cursor:pointer;white-space:nowrap}
+.ebtn:hover{filter:brightness(1.08)}
+.ebtn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+dialog#emerg{border:0;border-radius:14px;padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
+.em{padding:20px;display:grid;gap:14px}
+.em-top{display:flex;justify-content:space-between;align-items:center}
+.em-top h2{margin:0;color:var(--summit);font-size:28px}
+.em-x{background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--ink);font:600 15px var(--body);padding:6px 12px;cursor:pointer}
+.em-911{display:block;text-align:center;background:var(--summit);color:#fff;text-decoration:none;font:700 30px/1 var(--display);letter-spacing:.06em;padding:16px;border-radius:10px}
+.em-addr{margin:-4px 0 0;font-size:14px;color:var(--muted)}
+.em-addr b{color:var(--ink)}
+.em h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.em-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:480px){.em-grid{grid-template-columns:minmax(0,1fr)}}
+.em-ch{background:var(--meet-soft);border-radius:10px;padding:10px 14px;text-align:center}
+.em-ch b{display:block;font:700 30px/1 var(--display);color:var(--meet)}
+.em-ch span{font-size:12px;color:var(--muted)}
+.em-ph{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+.em-ph li{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.em-ph a{color:var(--meet);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.em-codes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:6px;font-size:13px}
+.em-codes div{display:flex;align-items:center;gap:8px}
+.em-codes b{min-width:52px}
+.em-sops{display:flex;flex-wrap:wrap;gap:8px}
+.sb{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.sb .panel{display:grid;gap:8px;align-content:start}
+.sb h3{margin:0;font:700 20px var(--display);letter-spacing:.02em}
+.sbt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:14px}
+.sbt dt{font-weight:700;font-variant-numeric:tabular-nums}
+.sbt dd{margin:0}
+.sb ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.pbnav{display:flex;flex-wrap:wrap;gap:8px}
+.basics{display:grid;gap:10px;font-size:14px}
+.basics .row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px}
+.basics .row b{font-weight:700}
+.basics .row span{color:var(--muted)}
+.minilinks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.minilinks a{color:var(--meet);font-weight:600}
+@media (max-width:640px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);border-bottom:0;padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));gap:2px;overflow:visible}
+  .tab{flex:1;text-align:center;padding:10px 2px;font-size:12px}
+  .ebtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));margin:0;box-shadow:0 2px 10px rgba(0,0,0,.25);z-index:21}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  header{padding-right:112px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tile .big{font-size:36px}
+  header .sub{display:none}
+  .em-codes{grid-template-columns:minmax(0,1fr)}
+}
+.dash-cols .panel{display:grid;gap:12px;min-width:0}
+.dash-cols h2{margin:0}
+.up{list-style:none;margin:0;padding:0;display:grid}
+.up li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.up li:last-child{border-bottom:0}
+.up .ud{text-align:center;line-height:1.1}
+.up .ud b{display:block;font:700 26px/1 var(--display);font-variant-numeric:tabular-nums}
+.up .ud span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.up .ut{display:flex;align-items:center;gap:8px;font-weight:700}
+.up .us{color:var(--muted);font-size:13px}
+.up li.off .ut span:last-child{text-decoration:line-through;color:var(--muted)}
+.up .wk{grid-column:1/-1;padding:14px 0 2px;border-bottom:0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass)}
+.tbdl{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.tbdl li{display:grid;gap:1px}
+.tbdl b{font-weight:700}
+.tbdl span{color:var(--muted);font-size:14px}
+.up li.wk{display:block}
+.reqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.req{display:grid;gap:4px;align-content:start;padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.req b{display:flex;align-items:center;gap:8px}
+.req span{color:var(--muted);font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filt{padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px var(--body);cursor:pointer}
+.filt[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filt:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:12px;align-content:start;min-width:0}
+.tcard h3{margin:0;font:700 22px/1.15 var(--display);letter-spacing:.02em}
+.tcard .prov{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tcard p{margin:0}
+.tmeta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;margin:0;font-size:14px}
+.tmeta dt{color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding-top:2px}
+.tmeta dd{margin:0;overflow-wrap:anywhere}
+.meets{display:flex;flex-wrap:wrap;gap:6px}
+.mb{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:13px;font-weight:700}
+.mb.yes{background:var(--outing-soft);color:var(--outing)}
+.mb.no{border:1.5px dashed var(--line);color:var(--muted);font-weight:600}
+.tcard .btn{justify-self:start}
+.tcard.how{border:2px solid var(--brass)}
+.howtag{justify-self:start;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:var(--brass-soft);color:var(--brass);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tnote{font-size:13px;color:var(--muted);font-style:italic}
+.tgroup{display:grid;gap:12px}
+.tgroup>h3{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
+.tgroup>p{margin:-6px 0 0;color:var(--muted);font-size:14px}
+.tlist{display:grid;gap:28px}
+.serm h3{margin:0;font:700 26px/1.1 var(--display);letter-spacing:.02em}
+.serm .meta{margin:4px 0 0;color:var(--muted);font-size:14px}
+.serm p{margin:0}
+.serm ul{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+.serm h4{margin:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ainote{font-size:12px;color:var(--muted);font-style:italic}
+.zoom{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px}
+.zoom .zid{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums;user-select:all}
+.dues{display:grid;gap:12px}
+.due{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.due.isdone h3{text-decoration:line-through;color:var(--muted)}
+.due h3{margin:0;font-size:17px}
+.due .w{color:var(--muted);font-size:14px}
+.pill{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;white-space:nowrap;background:var(--swot-soft);color:var(--ink)}
+.pill.today{background:var(--summit);color:#fff}
+.pill.tom{background:var(--brass-soft);color:var(--brass)}
+.pill.ok{background:var(--outing-soft);color:var(--outing)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;white-space:nowrap}
+.chk input{width:20px;height:20px;accent-color:var(--outing);cursor:pointer}
+@media (max-width:560px){.due{grid-template-columns:auto minmax(0,1fr)}.due .pill,.due .chk{grid-column:2;justify-self:start}}
+.wk7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wd{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 6px;min-height:92px;display:grid;align-content:start;gap:4px;min-width:0}
+.wd.now{border:2px solid var(--ink)}
+.wd b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.wd .n{font:700 22px/1 var(--display);font-variant-numeric:tabular-nums}
+.wchip{font-size:11px;font-weight:700;padding:3px 5px;border-radius:4px;color:#fff;background:var(--c);line-height:1.2;overflow-wrap:anywhere}
+.wchip.done{opacity:.45;text-decoration:line-through}
+.dh{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.dh li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-weight:600;font-size:14px}
+.dh li.isdone span:nth-child(2){text-decoration:line-through;color:var(--muted)}
+.due .btn{margin-top:8px;padding:7px 12px;font-size:13px}
+.dh a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.dh a:hover{color:var(--meet);text-decoration-color:var(--meet)}
+.tgroup.hw .tgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
+.side{display:grid;gap:16px;min-width:0}
+.res{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.res a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:600;background:var(--bg)}
+.res a:hover{border-color:var(--meet);color:var(--meet)}
+.res a span{color:var(--muted);font-weight:400;font-size:13px}
+.res a:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.intro{margin:-4px 0 0;color:var(--muted);max-width:62ch}
+.sopg{display:grid;gap:10px}
+.sopg h3{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
+.sop{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.sop summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:14px 16px}
+.sop summary::-webkit-details-marker{display:none}
+.sop summary b{font:700 22px/1.1 var(--display);letter-spacing:.02em}
+.sop summary .first{grid-column:1;color:var(--muted);font-size:14px}
+.sop summary::after{content:"+";grid-column:2;grid-row:1/span 2;font:600 24px var(--body);color:var(--muted);transition:transform .15s}
+.sop[open] summary::after{transform:rotate(45deg)}
+.sop summary:focus-visible{outline:3px solid var(--brass);outline-offset:2px;border-radius:10px}
+.sop-body{padding:4px 16px 16px;border-top:1px solid var(--line);display:grid;gap:12px}
+.sop-body h4{margin:8px 0 0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sop-body ul,.sop-body ol{margin:0;padding-left:20px;display:grid;gap:4px;max-width:70ch}
+.rule{background:var(--brass-soft);border-radius:8px;padding:10px 12px;font-weight:600}
+.rule.red{background:var(--summit-soft)}
+.lvlrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:start}
+@media (prefers-reduced-motion:reduce){.sop summary::after{transition:none}}
+@media (max-width:420px){.next{gap:14px;align-items:start}.dateblock{width:72px}.db-d{font-size:38px}.db-m{font-size:12px}}
+@media (max-width:420px){.panel{padding:14px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Armor Bearers · <span id="updated">Updated Nov 9, 2026</span></div>
+    <h1>AB Dashboard</h1>
+    <p class="sub">What's coming up, what's due, every event, training, the reference guide, and our SOPs, all in one place.</p>
+  </header>
+
+  <nav class="tabs" aria-label="Dashboard sections">
+    <a class="tab" href="#home" data-tab="home">Home</a>
+    <a class="tab" href="#due" data-tab="due">Due Soon</a>
+    <a class="tab" href="#calendar" data-tab="calendar">Calendar</a>
+    <a class="tab" href="#training" data-tab="training">Training</a>
+    <a class="tab" href="#playbook" data-tab="playbook">Playbook</a>
+    <button class="ebtn" type="button" id="ebtn" aria-haspopup="dialog">Emergency</button>
+  </nav>
+
+  <dialog id="emerg" aria-labelledby="em-h">
+    <div class="em">
+      <div class="em-top"><h2 id="em-h">Emergency</h2><button class="em-x" type="button" id="em-close">Close</button></div>
+      <a class="em-911" href="tel:911">CALL 911</a>
+      <p class="em-addr">Give dispatch this address: <b>3350 Greenbriar Pkwy SW, Atlanta, GA 30331</b></p>
+      <div class="em-grid">
+        <div class="em-ch"><b>CH 9</b><span>AB radio · long range</span></div>
+        <div>
+          <h3>Phones</h3>
+          <ul class="em-ph">
+            <li><span>Fire / EMS · Station 9</span><a href="tel:4045467000">404-546-7000</a></li>
+            <li><span>Police · Zone 4</span><a href="tel:4046586666">404-658-6666</a></li>
+            <li><span>Southern Regional Medical</span><a href="tel:7709918000">770-991-8000</a></li>
+            <li><span>Grady (trauma)</span><a href="tel:4046161000">404-616-1000</a></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Color codes</h3>
+        <div class="em-codes">
+          <div><span class="chip" style="background:#d32f2f"></span><b>Red</b>Fire</div>
+          <div><span class="chip" style="background:#f57c00"></span><b>Orange</b>Disruptive person</div>
+          <div><span class="chip" style="background:#fbc02d"></span><b>Yellow</b>Suspicious person</div>
+          <div><span class="chip" style="background:#388e3c"></span><b>Green</b>Cash escort</div>
+          <div><span class="chip" style="background:#1976d2"></span><b>Blue</b>Medical</div>
+          <div><span class="chip" style="background:#9e9e9e"></span><b>Grey</b>Severe weather</div>
+          <div><span class="chip" style="background:#ffffff"></span><b>White</b>Lockdown / lockout</div>
+          <div><span class="chip" style="background:#ec6fa6"></span><b>Pink</b>Missing child</div>
+          <div><span class="chip" style="background:#111111"></span><b>Black</b>911, call LEO</div>
+        </div>
+      </div>
+      <div>
+        <h3>SOPs</h3>
+        <div class="em-sops">
+          <a class="btn" href="#sop-active-shooter">Active Shooter</a>
+          <a class="btn" href="#sop-medical">Medical</a>
+          <a class="btn" href="#sop-missing-child">Missing Child</a>
+          <a class="btn" href="#sop-fire">Fire</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div data-view="home">
+    <section class="panel next" id="next-up" aria-label="Next up"></section>
+    <div class="tiles" id="tiles"></div>
+    <div class="dash-cols">
+      <div class="side">
+      <section class="panel" aria-labelledby="up-h">
+        <h2 id="up-h">Coming up <small style="font:600 14px var(--body);color:var(--muted)">· this week and next</small></h2>
+        <ol class="up" id="up-list"></ol>
+        <div><a class="btn" href="#calendar">See the full calendar</a></div>
+      </section>
+        <!-- SERMON:START -->
+        <section class="panel serm" aria-labelledby="serm-h">
+          <div class="eyebrow" id="serm-h">Latest sermon · Sun, Nov 1</div>
+          <div><h3>Prayer In Christ</h3><p class="meta">IN CHRIST series · Ephesians 1:15–23 · Milton James</p></div>
+          <p>Paul prays that believers would move past knowing <i>about</i> God to actually knowing Him. Sin makes holy things feel ordinary, so we need God to open the eyes of our hearts. When He does, we see the hope we're called to, an inheritance that can't fade, and the power that raised Jesus and put Him over every authority.</p>
+          <h4>Takeaways</h4>
+          <ul>
+            <li>Read Scripture for yourself first, not just to teach others.</li>
+            <li>Don't let sin make God's everyday gifts feel common.</li>
+            <li>Christ is the head of the church. We serve from His strength, not fear or performance.</li>
+          </ul>
+          <div><a class="btn primary" href="https://www.youtube.com/watch?v=81Z9hdcMZAQ" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>
+          <p class="ainote">Summary written by AI. Watch the full message for everything that was said.</p>
+        </section>
+        <!-- SERMON:END -->
+      </div>
+      <div class="side">
+        <section class="panel" id="due-panel" aria-labelledby="dueh-h">
+          <h2 id="dueh-h">Due this week</h2>
+          <ul class="dh" id="due-home"></ul>
+          <div><a class="btn" href="#due">Open Due Soon</a></div>
+        </section>
+        <section class="panel" aria-labelledby="sbh-h" style="display:grid;gap:12px">
+          <h2 id="sbh-h">Sunday basics</h2>
+          <div class="basics">
+            <div class="row"><b>Team A</b><span>Arrive 6:00am · briefing 6:45</span></div>
+            <div class="row"><b>Team B</b><span>Arrive 9:15am · briefing 9:35</span></div>
+            <div class="row"><b>Wear</b><span>All black top, black or dark gray pants, black boots or sneakers</span></div>
+            <div class="row"><b>Late?</b><span>15+ min late, check in with a team lead before taking a post</span></div>
+            <div class="row"><b>Out?</b><span>Tell leadership by Friday at noon</span></div>
+          </div>
+          <div class="minilinks"><a href="#basics">Full Sunday basics</a><a href="#reference">Reference Guide</a><a href="#sops">SOPs</a><a href="#training">Training</a></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel sync" aria-labelledby="sync-h">
+      <h2 id="sync-h">Add to your calendar</h2>
+      <p>Subscribe once and every AB date lands on your phone. When dates change, your calendar updates on its own.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fjelksmba.github.io%2Fab-calendar%2Fab-calendar.ics" target="_blank" rel="noopener">Google Calendar</a>
+        <a class="btn" href="webcal://jelksmba.github.io/ab-calendar/ab-calendar.ics">iPhone / Apple</a>
+        <a class="btn" href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fjelksmba.github.io%2Fab-calendar%2Fab-calendar.ics&amp;name=AB%20Calendar" target="_blank" rel="noopener">Outlook</a>
+      </div>
+      <div class="feed">
+        <code id="feed-url">https://jelksmba.github.io/ab-calendar/ab-calendar.ics</code>
+        <button class="btn" id="copy-feed" type="button">Copy link</button>
+      </div>
+      <p style="font-size:13px">Button not working? Copy the link and paste it into your calendar app under “Add calendar → From URL” (or “Subscribe”).</p>
+      <p style="font-size:13px"><b>Tip:</b> put this dashboard on your phone's home screen so it opens like an app. iPhone: tap Share, then Add to Home Screen. Android: tap the ⋮ menu, then Add to Home screen.</p>
+    </section>
+  </div>
+
+  <div data-view="calendar" hidden>
+  <div class="legend" aria-label="Legend">
+    <div class="lg"><span class="sw s-summit"></span>AB Summit</div>
+    <div class="lg"><span class="sw s-all"></span>Key Dates <small>(All Hands) = every AB serves</small></div>
+    <div class="lg"><span class="sw s-meet"></span>Team Meeting <small>1st Sat · 10am–2pm</small></div>
+    <div class="lg"><span class="sw s-swot"></span>SWOT <small>Mondays · 7pm</small></div>
+    <div class="lg"><span class="sw s-access"></span>Access <small>4th Thu · 7pm · mostly virtual</small></div>
+    <div class="lg"><span class="sw s-fast"></span>Consecration Week <small>church-wide fast · tentative</small></div>
+    <div class="lg"><span class="sw s-tbd"></span>Date TBD <small>shown as a month tag</small></div>
+    <div class="lg"><span class="sw s-cancel"></span>Cancelled <small>holiday</small></div>
+    <div class="lg"><span class="sw s-outing"></span>Quarterly Outing <small>tentative</small></div>
+  </div>
+
+  <section class="panel">
+    <h2>Key dates at a glance</h2>
+    <div class="keys" id="keys"></div>
+  </section>
+
+  <section>
+    <h2>Month by month</h2>
+    <div class="months" id="months"></div>
+  </section>
+
+  <p class="foot">Crossed-out dates are cancelled for a holiday: 5 Monday SWOTs, the Jan 2, Jul 3, and Sep 4 team meetings, and Access on Thanksgiving (Nov 25).</p>
+  </div>
+
+  <div data-view="playbook" hidden>
+  <div>
+    <h2>Playbook</h2>
+    <p class="intro">Everything an AB needs on a Sunday, from the AB Playbook.</p>
+  </div>
+  <nav class="pbnav" aria-label="Playbook sections">
+    <a class="btn" href="#basics">Sunday Basics</a>
+    <a class="btn" href="#reference">Reference Guide</a>
+    <a class="btn" href="#sops">SOPs</a>
+  </nav>
+
+  <section id="sunday-basics" aria-labelledby="sb-h" style="display:grid;gap:14px">
+    <h2 id="sb-h">Sunday Basics</h2>
+    <p class="intro">Serve at least 2 of 4 Sundays a month. On your Sundays, serve 2 of the 3 gatherings unless leadership approves otherwise.</p>
+    <div class="sb">
+      <div class="panel"><h3>Team A · Early</h3><dl class="sbt"><dt>6:00am</dt><dd>Arrive</dd><dt>6:15am</dt><dd>Perimeter checks (20 min)</dd><dt>6:40am</dt><dd>Pray-in</dd><dt>6:45am</dt><dd>Team briefing</dd><dt>7:15am</dt><dd>Radio check</dd></dl></div>
+      <div class="panel"><h3>Team B · Mid-morning</h3><dl class="sbt"><dt>9:15am</dt><dd>Arrive</dd><dt>9:30am</dt><dd>Pray-in</dd><dt>9:35am</dt><dd>Team briefing</dd><dt>9:40am</dt><dd>Radio check</dd></dl></div>
+      <div class="panel"><h3>Uniform</h3><ul><li>All black top, minimal logo</li><li>Black or dark gray pants or shorts</li><li>Black tactical boots or sneakers</li></ul></div>
+      <div class="panel"><h3>Late or out</h3><ul><li>Arriving after your call time counts as tardy.</li><li>15+ minutes late: check in with a team lead before taking a post.</li><li>Can't serve? Tell leadership by Friday at 12pm.</li><li>Up to 3 unexcused tardies and 2 unexcused absences per 3 months.</li></ul></div>
+    </div>
+  </section>
+
+  <section id="quick-reference" aria-labelledby="qr-h">
+    <h2 id="qr-h">Reference Guide</h2>
+    <p class="intro" style="margin-bottom:14px">The AB pocket guide: who to call, what the codes mean, and how to talk on the radio.</p>
+    <div class="ref">
+
+      <div class="panel">
+        <h3>Emergency Services</h3>
+        <p class="addr">Church<span>3350 Greenbriar Pkwy SW, Atlanta, GA 30331</span></p>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Service</th><th>Where</th><th>Phone</th></tr></thead>
+          <tbody>
+            <tr><td>Hospital</td><td>Southern Regional Medical<span class="sub2">11 Upper Riverdale Rd SW, Riverdale, GA 30274</span><span class="sub2">7.5 mi · 12–15 min</span></td><td class="num"><a href="tel:7709918000">770-991-8000</a></td></tr>
+            <tr><td>Trauma Center</td><td>Grady Memorial Hospital<span class="sub2">80 Jesse Hill Jr. Dr SE, Atlanta, GA 30303</span><span class="sub2">9.5 mi · 15–20 min</span></td><td class="num"><a href="tel:4046161000">404-616-1000</a></td></tr>
+            <tr><td>Fire / EMS</td><td>Atlanta Fire, Station 9<span class="sub2">3501 MLK Jr. Dr SW, Atlanta, GA 30331</span><span class="sub2">1.2 mi · 3–5 min</span></td><td class="num"><a href="tel:4045467000">404-546-7000</a></td></tr>
+            <tr><td>Police</td><td>Atlanta Police, Zone 4<span class="sub2">1125 Cascade Cir SW, Atlanta, GA 30311</span><span class="sub2">4.5 mi · 8–12 min</span></td><td class="num"><a href="tel:311">311</a><span class="sub2">or</span><a href="tel:4046586666">404-658-6666</a></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Color Codes</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Color</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip" style="background:#d32f2f"></span>Red</td><td>Fire Emergency</td></tr>
+            <tr><td><span class="chip" style="background:#f57c00"></span>Orange</td><td>Disruptive or Combative Person</td></tr>
+            <tr><td><span class="chip" style="background:#fbc02d"></span>Yellow</td><td>Suspicious Person</td></tr>
+            <tr><td><span class="chip" style="background:#388e3c"></span>Green</td><td>Cash or Offering Escort</td></tr>
+            <tr><td><span class="chip" style="background:#1976d2"></span>Blue</td><td>Medical Emergency</td></tr>
+            <tr><td><span class="chip" style="background:#9e9e9e"></span>Grey</td><td>Severe Weather</td></tr>
+            <tr><td><span class="chip" style="background:#ffffff"></span>White</td><td>Soft Lockdown or Lockout</td></tr>
+            <tr><td><span class="chip" style="background:#ec6fa6"></span>Pink</td><td>Missing or Lost Child</td></tr>
+            <tr><td><span class="chip" style="background:#111111"></span>Black</td><td>911: Respond quickly and call LEO</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Radio Channels</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Ch</th><th>Team</th><th>Range</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Parking Lot</td><td>Short</td></tr>
+            <tr><td class="num">2</td><td>Formation Kids</td><td>Short</td></tr>
+            <tr><td class="num">3</td><td>Welcome Team</td><td>Short</td></tr>
+            <tr><td class="num">4</td><td>On The Line</td><td>Short</td></tr>
+            <tr><td class="num">5</td><td>Medical</td><td>Short</td></tr>
+            <tr><td class="num">6</td><td>Merch Team</td><td>Short</td></tr>
+            <tr><td class="num">7</td><td>Ushers</td><td>Short</td></tr>
+            <tr><td class="num">8</td><td>Facilities</td><td>Short</td></tr>
+            <tr class="ab-row"><td class="num">9</td><td><b>Armor Bearers</b></td><td><span class="long">Long</span></td></tr>
+            <tr><td class="num">10</td><td>2819 Teens</td><td>Short</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Radio Phrases</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Say</th><th>Means</th></tr></thead>
+          <tbody>
+            <tr><td>Over</td><td>Finished speaking. Please respond.</td></tr>
+            <tr><td>Go Ahead</td><td>Send your message.</td></tr>
+            <tr><td>Copy</td><td>Message received and understood.</td></tr>
+            <tr><td>Say Again</td><td>Retransmit your message.</td></tr>
+            <tr><td>Standby</td><td>Message received, but please wait.</td></tr>
+            <tr><td>Affirmative</td><td>Yes.</td></tr>
+            <tr><td>Negative</td><td>No.</td></tr>
+            <tr><td>Do you copy?</td><td>Do you understand?</td></tr>
+            <tr><td>Unreadable</td><td>Can't understand. Broken or garbled transmission.</td></tr>
+            <tr><td>Disregard</td><td>Don't pay attention to last message.</td></tr>
+            <tr><td>Out</td><td>Clear radio transmission. Conversation over.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel" style="grid-column:1/-1">
+        <h3>Threat Levels</h3>
+        <div class="tw"><table class="rt">
+          <thead><tr><th>Level</th><th>What you see</th><th>Response</th></tr></thead>
+          <tbody>
+            <tr><td><span class="lvl" style="background:#5b8f6a">1</span></td><td><b>Curious, but calm</b></td><td>Observe, engage gently, offer help, and build rapport.</td></tr>
+            <tr><td><span class="lvl" style="background:#8a9a3c">2</span></td><td><b>Rule Breaker</b></td><td>Address behavior respectfully, set limits, stay calm, and de-escalate if pushback increases.</td></tr>
+            <tr><td><span class="lvl" style="background:#c99a1e">3</span></td><td><b>Verbally Disruptive</b></td><td>Engage with clear, calm verbal de-escalation. Ask to step aside and talk while monitoring body language.</td></tr>
+            <tr><td><span class="lvl" style="background:#d0731f">4</span></td><td><b>Threatening or Aggressive</b></td><td>Maintain distance. Keep low and calm tone. Signal/call for backup. Try to defuse, but be ready to disengage or call LEO.</td></tr>
+            <tr><td><span class="lvl" style="background:#c0392b">5</span></td><td><b>Actively Dangerous</b></td><td>Disengage if possible. Secure the safety of others. Call LEO and engage physically only if necessary, trained, and justified.</td></tr>
+            <tr><td><span class="lvl" style="background:#7b1d1d">6</span></td><td><b>Active Assailant</b></td><td>Use active shooter protocol, move to cover or concealment. Notify LEO and stop the threat if capable and trained to do so.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+    </div>
+  </section>
+
+    <section aria-labelledby="sop-h" style="display:grid;gap:20px">
+      <div>
+        <h2 id="sop-h">SOPs</h2>
+        <p class="intro">The key steps from each SOP in the AB Playbook. Tap one to open it. After any incident: file an incident report and debrief with the team.</p>
+      </div>
+
+      <div class="sopg">
+        <h3>Watch &amp; Locate</h3>
+
+        <details class="sop" id="sop-bolo">
+          <summary><b>BOLO Protocol</b><span class="first">Match the threat level, then act. AB traffic on Channel 9.</span></summary>
+          <div class="sop-body">
+            <div class="lvlrow"><span class="lvl" style="background:#5b8f6a">1</span><div><b>Low.</b> Not considered dangerous; information only. <br>Observe and report. Don't engage without backup or verification.</div></div>
+            <div class="lvlrow"><span class="lvl" style="background:#c99a1e">2</span><div><b>Moderate.</b> Possible non-violent crime, no known violent history. May flee or resist. <br>Approach with caution; detain with backup if necessary.</div></div>
+            <div class="lvlrow"><span class="lvl" style="background:#d0731f">3</span><div><b>High.</b> Potentially armed, dangerous, or violent history. <br>Do not approach alone. Treat as high-risk.</div></div>
+            <div class="lvlrow"><span class="lvl" style="background:#c0392b">4</span><div><b>Critical.</b> Immediate, extreme danger (active shooter, violent person). <br>Broadcast to all units immediately. Initiate lockdown or alerts.</div></div>
+          </div>
+        </details>
+
+        <details class="sop" id="sop-missing-child">
+          <summary><b>Missing Child</b><span class="first">Alert, lock the exits, search by zone. Not found in 10 minutes: call 911.</span></summary>
+          <div class="sop-body">
+            <div class="rule red">Not found within 10 minutes → call 911.</div>
+            <h4>1 · Respond immediately</h4>
+            <ul><li>Alert the nearest staff member and the Child Safety Coordinator.</li><li>Secure the area. No one leaves the premises until further notice.</li><li>Get the details: full name, age, description (height, weight, hair, clothing), last place and time seen, special needs. Get the parent's contact info.</li></ul>
+            <h4>2 · Search</h4>
+            <ul><li>Split into search teams by zone: classrooms, restrooms, playgrounds, parking, common areas.</li><li>Search every area systematically. Stay in touch by radio.</li><li>Put someone on every exit with the child's description.</li></ul>
+            <h4>3 · Communicate</h4>
+            <ul><li>Keep the parent informed of every step.</li><li>Be discreet with the congregation. Keep people calm.</li></ul>
+            <h4>4 · After</h4>
+            <ul><li>Confirm the child's identity, reunite with the parent, and do a quick wellness check.</li><li>Incident report and debrief.</li></ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="sopg">
+        <h3>People &amp; Presence</h3>
+
+        <details class="sop" id="sop-abc">
+          <summary><b>ABC Disruptive Guest</b><span class="first">Servant Leader spots it, AB defuses it, LEO steps in if needed.</span></summary>
+          <div class="sop-body">
+            <h4>A · Servant Leader</h4>
+            <ul><li>First to see or engage the disruptive guest.</li><li>Alerts the ABs for help.</li></ul>
+            <h4>B · Armor Bearer</h4>
+            <ul><li>Defuse it discreetly, without confrontation.</li><li>If there's hostility, at least two ABs are present and the rest stay on alert.</li><li>If it escalates, call the LEO on duty.</li></ul>
+            <h4>C · Law Enforcement</h4>
+            <ul><li>Steps in to de-escalate.</li><li>May escort the person off the premises.</li><li>After review, a no-trespass order may be issued.</li></ul>
+          </div>
+        </details>
+
+        <details class="sop" id="sop-spiritual">
+          <summary><b>Spiritual Manifestation</b><span class="first">Stay calm, notify the prayer team, approach with two. Dignity first.</span></summary>
+          <div class="sop-body">
+            <h4>Signs</h4>
+            <ul><li>Sudden emotional outbursts.</li><li>Screaming, hissing, or mocking.</li><li>Collapse without a medical cause.</li><li>Disruption during altar call or worship.</li></ul>
+            <h4>Response</h4>
+            <ul><li>Stay calm. Don't escalate, provoke, or label anyone.</li><li>Discreetly notify the prayer team (SRL) or a designated pastor or intercessor.</li><li>If it's unsafe or disruptive, approach with two team members: “We're here to help. Let's step out and pray with you.”</li><li>Escort them to a prayer area or side room.</li></ul>
+            <div class="rule">No restraint unless there's an immediate threat. No deliverance unless trained and authorized.</div>
+            <h4>After</h4>
+            <ul><li>Debrief with the team and pastors.</li><li>Incident report: time, place, what happened, who was involved, actions taken, who was notified.</li><li>Pray together afterward.</li></ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="sopg">
+        <h3>Life Safety</h3>
+
+        <details class="sop" id="sop-fire">
+          <summary><b>Fire Emergency</b><span class="first">Pull the alarm, call 911, clear the building, headcount. No re-entry.</span></summary>
+          <div class="sop-body">
+            <h4>1 · Respond immediately</h4>
+            <ul><li>Activate the fire alarm.</li><li>Notify the Fire Safety Coordinator.</li><li>Call 911 and give the church address: 3350 Greenbriar Pkwy SW.</li><li>Use an extinguisher only if the fire is small and you're trained.</li></ul>
+            <h4>2 · Evacuate</h4>
+            <ul><li>Announce the evacuation clearly and calmly.</li><li>Use the marked routes to the assembly area. No elevators.</li><li>Check every room, including restrooms and storage.</li><li>Help anyone with mobility challenges.</li><li>Do a headcount at the assembly area.</li></ul>
+            <h4>3 · Communicate</h4>
+            <ul><li>Tell the fire department who may still be inside and where.</li><li>Keep leadership and the congregation updated.</li></ul>
+            <div class="rule red">No one goes back in until the fire department clears it.</div>
+          </div>
+        </details>
+
+        <details class="sop" id="sop-medical">
+          <summary><b>Medical Emergency</b><span class="first">Scene safe, call for help, care if trained. Don't move them.</span></summary>
+          <div class="sop-body">
+            <h4>1 · Respond immediately</h4>
+            <ul><li>Figure out what's happening and make sure the scene is safe.</li><li>Alert the nearest staff member, medical volunteer, or First Aid Coordinator.</li><li>Call 911 if it's life-threatening or beyond what we can handle.</li><li>First aid, CPR, or AED if you're trained and it's safe.</li></ul>
+            <div class="rule">Don't move the person unless they're in immediate danger.</div>
+            <h4>2 · Communicate</h4>
+            <ul><li>Contact their emergency contact if known.</li><li>Keep leadership informed. Be discreet with the congregation.</li></ul>
+            <h4>3 · When EMS arrives</h4>
+            <ul><li>Guide responders to the person.</li><li>Share any medical history you know.</li><li>Clear space around them so responders can work.</li></ul>
+          </div>
+        </details>
+
+        <details class="sop" id="sop-active-shooter">
+          <summary><b>Active Shooter</b><span class="first">Act immediately. Whoever is closest has the right of way.</span></summary>
+          <div class="sop-body">
+            <div class="rule red">All steps happen immediately. Whoever is closest to the threat has the right of way.</div>
+            <ul><li>Firearm at low-ready. Only fire with a clear shot and no people in the way.</li><li>Command people near you to get down and take cover. Be loud and firm.</li><li>If the threat is outside the room, lock down and keep people in place.</li><li>AB1 and AB2 cover the pastor and first family, move them to the worship team staging area, and lock down.</li><li>Roamers move to the threat. Only give AB1 and AB2 the call to move (extraction or greenroom) once you can see it's handled.</li><li>Listen to your radio for direction.</li></ul>
+            <div class="rule">Know your post's assignment. The full position-by-position steps are in the AB Playbook.</div>
+          </div>
+        </details>
+      </div>
+    </section>
+  </div>
+
+  <div data-view="due" hidden>
+    <div>
+      <h2>Due Soon</h2>
+      <p class="intro">Weekly to-dos for every AB. Check them off as you go. Your checkmarks are saved on this device and reset each week.</p>
+    </div>
+    <div class="dues" id="due-list"></div>
+    <section class="panel" aria-labelledby="wk-h" style="display:grid;gap:12px">
+      <h2 id="wk-h" style="margin:0;font-size:20px">This week at a glance</h2>
+      <div class="wk7" id="due-week"></div>
+    </section>
+  </div>
+
+  <div data-view="training" hidden>
+    <div>
+      <h2>Training Opportunities</h2>
+      <p class="intro">Outside classes you can sign up for. Each one shows which yearly AB requirements it covers.</p>
+    </div>
+    <section class="panel" aria-labelledby="req-h" style="display:grid;gap:12px">
+      <h2 id="req-h" style="margin:0;font-size:20px">Yearly AB requirements</h2>
+      <div class="reqs">
+        <div class="req"><b><span class="dot" style="--c:var(--summit)"></span>Firearms</b><span>A Pistol 2 or Pistol 3 level course (intermediate or advanced defensive shooting). Pistol 1 / beginner classes don't count.</span></div>
+        <div class="req"><b><span class="dot" style="--c:var(--meet)"></span>First Aid / CPR</b><span>A First Aid, CPR, and AED class with a certificate, such as American Heart Association Heartsaver or American Red Cross.</span></div>
+        <div class="req"><b><span class="dot" style="--c:var(--outing)"></span>Stop the Bleed</b><span>Stop the Bleed or an equivalent bleeding-control course approved by the Security Director.</span></div>
+      </div>
+    </section>
+    <div class="filters" role="group" aria-label="Show classes that meet">
+      <button class="filt" type="button" data-f="all" aria-pressed="true">All</button>
+      <button class="filt" type="button" data-f="how" aria-pressed="false">House of Worship</button>
+      <button class="filt" type="button" data-f="firearms" aria-pressed="false">Firearms</button>
+      <button class="filt" type="button" data-f="firstaid" aria-pressed="false">First Aid / CPR</button>
+      <button class="filt" type="button" data-f="stb" aria-pressed="false">Stop the Bleed</button>
+    </div>
+    <div class="tlist" id="tgrid"></div>
+    <p class="foot">Have a class to add? Send it to the AB training lead.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const b=document.getElementById("copy-feed"), u=document.getElementById("feed-url");
+  b.addEventListener("click",()=>{
+    const done=()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy link",1800);};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(u);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected — press copy";};
+    try{navigator.clipboard.writeText(u.textContent).then(done,sel);}catch(e){sel();}
+  });
+})();
+(function(){
+  const Y=2027;
+  const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const DW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const key=(m,d)=>m+"-"+d;
+  const summit=key(0,30);
+  const allHands={[key(2,28)]:"Easter Sunday",[key(11,26)]:"Christmas Sunday"};
+  const keyDays={[key(2,26)]:"Good Friday",[key(2,28)]:"Easter Sunday (All Hands)",[key(4,9)]:"Mother's Day",[key(5,20)]:"Father's Day",[key(11,26)]:"Christmas Sunday (All Hands)"};
+  const access={}, accessCancel={10:"Thanksgiving"};
+  for(let m=0;m<12;m++){let c=0;for(let d=1;d<=31;d++){if(new Date(Y,m,d).getDay()===4&&++c===4){access[m]=d;break;}}}
+  const outingMonths={2:"Q1",5:"Q2",8:"Q3",11:"Q4"};
+  const outingDay={2:20,5:12,8:18,11:11};
+  const tbd={7:["Baptism · Date TBD"],9:["National Access · Sat TBD"]};
+  const holidayMon={[key(0,18)]:"MLK Day",[key(1,15)]:"Presidents' Day",[key(4,31)]:"Memorial Day",[key(6,5)]:"July 4th (observed)",[key(8,6)]:"Labor Day"};
+  const meetFlags={0:"New Year's weekend",6:"July 4th weekend",8:"Labor Day weekend"};
+
+  const meets={};
+  for(let m=0;m<12;m++){ for(let d=1;d<=7;d++){ if(new Date(Y,m,d).getDay()===6){meets[m]=d;break;} } }
+
+  const fmt=(m,d)=>{const w=DW[new Date(Y,m,d).getDay()];return w+", "+MS[m]+" "+d;};
+
+  // Key dates panel
+  const keys=document.getElementById("keys");
+  const col=(title,items)=>{const c=document.createElement("div");c.innerHTML="<h3>"+title+"</h3><ul>"+items.join("")+"</ul>";keys.appendChild(c);};
+  col("AB Summit",['<li><span class="d">'+fmt(0,30)+'</span><span>Annual Summit</span></li>']);
+  col("Key Dates",Object.keys(keyDays).map(k=>k.split("-").map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(([m,d])=>'<li><span class="d">'+fmt(m,d)+'</span><span>'+keyDays[key(m,d)]+'</span></li>'));
+  col("Team Meetings · 10am–2pm",Object.keys(meets).filter(m=>!meetFlags[m]).map(m=>'<li><span class="d">'+fmt(+m,meets[m])+'</span></li>'));
+  col("Quarterly Outings",Object.keys(outingMonths).map(m=>{m=+m;return '<li><span class="d">'+fmt(m,outingDay[m])+'</span><span>'+outingMonths[m]+' · <span class="tent">Tentative</span></span></li>';}));
+  col("Access · 4th Thursday · 7pm",[].concat(Object.keys(access).map(m=>{m=+m;return accessCancel[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,access[m])+'</span><span><span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></li>':'<li><span class="d">'+fmt(m,access[m])+'</span></li>';})));
+  col("Dates Not Confirmed",['<li><span class="d">Jan 11–16</span><span>Consecration Week · church-wide fast</span></li>','<li><span class="d">August</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
+  let swotCount=0; const holList=[];
+  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){swotCount++; if(holidayMon[key(m,d)]) holList.push('<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,d)+'</span><span><span class="cx">Cancelled · Holiday</span> ('+holidayMon[key(m,d)]+')</span></li>');}}}
+  col("Monday SWOTs · 7pm",['<li><span class="d">'+(swotCount-holList.length)+' SWOTs</span><span>Jan 4 – Dec 27</span></li>','<li style="color:var(--muted);font-size:13px;margin-top:4px">No SWOT on these holiday Mondays:</li>'].concat(holList));
+
+  // ---------- Dashboard: one list of every event ----------
+  const EV=[];
+  const add=(m,d,o)=>{const allDay=o.h==null;const s=new Date(Y,m,d,allDay?0:o.h,0);const e=allDay?new Date(Y,m,(o.endD||d)+1):new Date(Y,m,d,o.eh,0);EV.push(Object.assign({m,d,s,e},o));};
+  add(0,30,{t:"AB Summit",type:"summit",c:"var(--summit)"});
+  add(0,11,{t:"Consecration Week",sub:"Church-wide fast · Jan 11–16 · Tentative",type:"fast",c:"var(--fast)",endD:16});
+  Object.keys(keyDays).forEach(k=>{const [m,d]=k.split("-").map(Number);add(m,d,{t:keyDays[k],type:"key",c:"var(--brass)",ah:/All Hands/.test(keyDays[k])});});
+  Object.keys(meets).forEach(m=>{m=+m;add(m,meets[m],{t:"Team Meeting",sub:"10am–2pm",h:10,eh:14,type:"meet",c:"var(--meet)",off:meetFlags[m]?"Cancelled · "+meetFlags[m]:null});});
+  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm · Zoom",zoom:true,h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
+  Object.keys(access).forEach(m=>{m=+m;add(m,access[m],{t:"Access",sub:"7pm · virtual unless announced",h:19,eh:20,type:"access",c:"var(--access)",off:accessCancel[m]?"Cancelled · Holiday ("+accessCancel[m]+")":null});});
+  Object.keys(outingDay).forEach(m=>{m=+m;add(m,outingDay[m],{t:outingMonths[m]+" Team Outing",sub:"Tentative",type:"outing",c:"var(--outing)"});});
+  // November & December 2026: SWOTs only (no team meeting, no outing)
+  [[10,2],[10,9],[10,16],[10,23],[10,30],[11,7],[11,14],[11,21],[11,28]].forEach(([m,d])=>EV.push({y:2026,m,d,s:new Date(2026,m,d,19),e:new Date(2026,m,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));
+  EV.sort((a,b)=>a.s-b.s);
+  const fmtD=x=>DW[x.getDay()]+", "+MS[x.getMonth()]+" "+x.getDate();
+  const ZOOM="https://us02web.zoom.us/j/84578356424";
+
+  const now=new Date(), day0=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());
+  const daysTo=x=>Math.round((day0(x)-day0(now))/864e5);
+  const rel=x=>{const n=daysTo(x);return n<=0?"Today":n===1?"Tomorrow":"In "+n+" days";};
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const up=EV.filter(e=>e.e>now), live=up.filter(e=>!e.off);
+
+  const nx=document.getElementById("next-up");
+  if(live[0]){const e=live[0];
+    nx.innerHTML='<div class="dateblock" style="--c:'+e.c+'"><div class="db-m">'+MS[e.m]+'</div><div class="db-d">'+e.d+'</div><div class="db-w">'+DW[e.s.getDay()]+'</div></div>'+
+      '<div style="min-width:0"><div class="eyebrow">Next up</div><h2>'+esc(e.t)+'</h2><p class="meta">'+fmtD(e.s)+(e.sub?' · '+esc(e.sub):'')+'</p><span class="when'+(daysTo(e.s)<=0?' today':'')+'">'+rel(e.s)+'</span>'+(e.zoom?'<div class="zoom"><a class="btn primary" href="'+ZOOM+'" target="_blank" rel="noopener">Join on Zoom ↗</a><span class="zid">Meeting ID 845 7835 6424</span></div>':'')+'</div>';
+  } else nx.innerHTML='<div style="grid-column:1/-1"><div class="eyebrow">Next up</div><h2>That\'s a wrap on 2027</h2><p class="meta">The 2028 calendar will show up here once it\'s set.</p></div>';
+
+  const tile=(label,c,e)=>'<div class="tile"><div class="lab"><span class="dot" style="--c:'+c+'"></span>'+label+'</div>'+(e?'<div class="big">'+(daysTo(e.s)<=0?'Today':daysTo(e.s)+'<small>'+(daysTo(e.s)===1?'day':'days')+'</small>')+'</div><div class="dt">'+fmtD(e.s)+'</div>':'<div class="big" style="font-size:24px">Done</div><div class="dt">Nothing left in 2027</div>')+'</div>';
+  document.getElementById("tiles").innerHTML=
+    tile("Next AB Summit","var(--summit)",live.find(e=>e.type==="summit"))+
+    tile("Next Team Meeting","var(--meet)",live.find(e=>e.type==="meet"))+
+    tile("Next Team Outing","var(--outing)",live.find(e=>e.type==="outing"))+
+    (()=>{const k=live.find(e=>e.type==="key");return tile(k?esc(k.t.replace(" (All Hands)",""))+(k.ah?" · All Hands":""):"Next Key Date","var(--brass)",k);})();
+
+  const ul=document.getElementById("up-list");
+  const wkStart=x=>{const t=day0(x);t.setDate(t.getDate()-((t.getDay()+6)%7));return t;};
+  const thisWk=+wkStart(now);
+  let html="",lastWk=null;
+  const horizon=wkStart(now);horizon.setDate(horizon.getDate()+14); // through the end of next week (Sunday)
+  // Sunday Gatherings (home list only, not on the calendar)
+  const SUNS=[];
+  for(let d=day0(now);d<horizon;d.setDate(d.getDate()+1)){if(d.getDay()!==0)continue;
+    const res=d.getFullYear()===2027&&d.getMonth()===2&&d.getDate()===28;
+    const s=new Date(d);s.setHours(res?6:8);const en=new Date(d);en.setHours(res?16:14,30);
+    if(en>now)SUNS.push({m:d.getMonth(),d:d.getDate(),s,e:en,t:res?"Resurrection Sunday Gatherings":"Sunday Gatherings",sub:res?"6am · 8:30am · 11:30am · 2:30pm":"8am · 10:30am · 1pm",c:"var(--ink)"});}
+  up.filter(e=>e.s<horizon).concat(SUNS).sort((a,b)=>a.s-b.s).forEach(e=>{const w=+wkStart(e.s);
+    if(w!==lastWk){const lbl=w===thisWk?"This week":w===thisWk+6048e5?"Next week":"Week of "+MS[new Date(w).getMonth()]+" "+new Date(w).getDate();html+='<li class="wk">'+lbl+'</li>';lastWk=w;}
+    html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
+  ul.innerHTML=html||'<li><div></div><div class="us">Nothing scheduled this week or next.</div></li>';
+
+  // ---------- Due soon ----------
+  const DUE=[
+    {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)",link:"https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform",cta:"Submit SWOT analysis"},
+    {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)",link:"https://2819church.churchcenter.com/me",cta:"Open my schedule in Church Center"},
+    {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)",link:"https://2819church.churchcenter.com/people/forms/982537",cta:"Register in Church Center"}
+  ];
+  const ymd=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
+  const nextDue=wd=>{const d=day0(now);d.setDate(d.getDate()+((wd-d.getDay()+7)%7));return d;};
+  const isDone=(id,d)=>{try{return localStorage.getItem("ab-due-"+id+"-"+ymd(d))==="1";}catch(e){return false;}};
+  const setDone=(id,d,v)=>{try{v?localStorage.setItem("ab-due-"+id+"-"+ymd(d),"1"):localStorage.removeItem("ab-due-"+id+"-"+ymd(d));}catch(e){}};
+  const pill=(d,done)=>{if(done)return '<span class="pill ok">✓ Done</span>';const n=daysTo(d);return n===0?'<span class="pill today">Due today</span>':n===1?'<span class="pill tom">Due tomorrow</span>':'<span class="pill">Due '+DW[d.getDay()]+' · in '+n+' days</span>';};
+  const renderDue=()=>{
+    const items=DUE.map(x=>Object.assign({due:nextDue(x.wd)},x)).sort((a,b)=>a.due-b.due);
+    items.forEach(x=>x.done=isDone(x.id,x.due));
+    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><h3>'+x.t+'</h3><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div>'+(x.link?'<a class="btn" href="'+x.link+'" target="_blank" rel="noopener">'+x.cta+' ↗</a>':'')+'</div>'+pill(x.due,x.done)+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div>').join('');
+    document.getElementById("due-home").innerHTML=items.map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+(x.link?'<a href="'+x.link+'" target="_blank" rel="noopener">'+x.short+'</a>':x.short)+'</span>'+pill(x.due,x.done)+'</li>').join('');
+    const ws=wkStart(now);let wk="";
+    for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const today=+d===+day0(now);
+      wk+='<div class="wd'+(today?' now':'')+'"><b>'+DW[d.getDay()]+'</b><span class="n">'+d.getDate()+'</span>'+DUE.filter(x=>x.wd===d.getDay()).map(x=>'<span class="wchip'+(isDone(x.id,d)?' done':'')+'" style="--c:'+x.c+'">'+x.short+'</span>').join('')+'</div>';}
+    document.getElementById("due-week").innerHTML=wk;
+    document.querySelectorAll("#due-list input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{const it=items.find(x=>x.id===cb.dataset.id);setDone(it.id,it.due,cb.checked);renderDue();const n=document.getElementById("due-"+it.id);if(n)n.focus();}));
+  };
+  renderDue();
+
+  // ---------- Training ----------
+  // To add a class: copy one block below and fill it in. meets: true = counts toward that yearly requirement.
+  const SRGC="South River Gun Club, 5205 GA Hwy 212, Covington, GA 30016";
+  const TRAINING=[
+    // ---- House of Worship ----
+    {how:true,title:"Protecting Houses of Worship",provider:"USCCA",format:"In person · online video series too",
+     desc:"Built for church safety teams: spotting threats, emergency planning, responding decisively to an attack, Run-Hide-Fight adapted for a house of worship, open-door and volunteer-team challenges, and the legal line for deadly force.",
+     cost:"Free (in-person class)",where:"Taught by USCCA instructors around Georgia. Use “Find an Event Near You.”",link:"https://www.usconcealedcarry.com/firearms-training/classes/protecting-houses-of-worship/",
+     note:"Teams of 5+ can get USCCA group membership pricing.",meets:{}},
+    {how:true,title:"Safety Member Certification",provider:"Sheepdog Church Security",format:"Online · self-paced",
+     desc:"Self-paced video modules on active shooter response, de-escalating disruptive persons, and medical emergency preparedness. This is the certification in our AB training assignments.",
+     cost:"See site",where:"Online",link:"https://sheepdog-church-security.thinkific.com/bundles/safety-member-certification",meets:{}},
+    {how:true,title:"Sunday Safety Talks",provider:"Sheepdog Church Security",format:"Online · live",
+     desc:"Live online church safety talks with Kris Moloney. Free for Atlanta churches. Register once for the whole schedule.",
+     cost:"Free",where:"Online · Sundays at 3pm Eastern (2pm Central)",link:"https://sheepdog-church-security.thinkific.com/pages/church-security-training-in-atlanta-georgia-sheepdog-church-security-academy",meets:{}},
+    {how:true,title:"Foundations of Church Security",provider:"Christian Warrior Training",format:"Online · self-paced",
+     desc:"Free online courses for church security ministries, starting with Foundations of Church Security and De-escalation Tactics. Covers risk assessment, emergency response, and conflict resolution. Certificate when you finish.",
+     cost:"Free",where:"Online",link:"https://christianwarriortraining.ezycourse.com/",meets:{}},
+    // ---- Firearms ----
+    {title:"Pistol 2: Ready to Carry",provider:"Lion's Den Tactical",format:"In person · day 1 virtual",
+     desc:"Drawing from the holster and getting on target, with drills that build speed and accuracy. 4 hours of class plus 4 hours on the range. Holster must be Kydex or leather and fully cover the trigger.",
+     cost:"$250",where:SRGC,link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-2387171/class-covington-ga-pistol-2-ready-to-carry-6f621/",
+     meets:{firearms:true}},
+    {title:"Handgun Fundamentals 2 (Intermediate)",provider:"SoloTactix Firearms Training",format:"In person",
+     desc:"Intermediate handgun class taught by USCCA-certified instructor Solomon Murray. Handgun Fundamentals 3 ($200) is the next step up.",
+     cost:"$175",where:"Covington, GA (confirm the range when you register)",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/solotactix-firearms-training-llc-2100142/",
+     meets:{firearms:true}},
+    {title:"Pistol 103: Conceal Carry",provider:"Georgia Firing Line",format:"In person · 2 hours",
+     desc:"Intermediate class on carrying for protection: carry mindset, a legal overview, holster choice, the draw, defensive shooting, and what happens after a defensive encounter. You need Pistol 101 or the same skills. Bring a strong-side holster, belt, spare magazine, and 250 rounds.",
+     cost:"$175",where:"2727 Canton Rd, Marietta, GA 30066",link:"https://www.gafiringline.com/service-page/pistol-103-conceal-carry-weapons",
+     meets:{firearms:true}},
+    {title:"Foundations Handgun Basics",provider:"Bass Reeves Gun Club",format:"Online, then in person",
+     desc:"Intro handgun class led by certified instructors, held every other month. Part online, then live fire on the range. Limited to 12 seats.",
+     cost:"$100",where:SRGC,link:"https://www.bassreevesgc.com/",
+     note:"Beginner level. Great for new ABs, but it doesn't count toward the yearly firearms requirement.",meets:{}},
+    {title:"Legal Use of Force",provider:"Lion's Den Tactical",format:"In person · monthly, 7pm",
+     desc:"The legal side of using force. Held about once a month.",
+     cost:"Free",where:"Ellenwood, GA 30294",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-2387171/",meets:{}},
+    // ---- Medical ----
+    {title:"Stop the Bleed",provider:"Lion's Den Tactical",format:"In person",
+     desc:"Bleeding control class: direct pressure, wound packing, and tourniquets.",
+     cost:"$75",where:"Newnan, GA",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-1488902/",
+     meets:{stb:true}},
+    {title:"Stop the Bleed",provider:"American College of Surgeons",format:"In person",
+     desc:"The national Stop the Bleed program. Public classes are run by hospitals and fire departments and are often free.",
+     cost:"Often free",where:"Hospitals and fire stations across metro Atlanta",link:"https://www.stopthebleed.org",
+     meets:{stb:true}},
+    {title:"First Aid / CPR / AED",provider:"American Red Cross",format:"In person or blended",
+     desc:"Red Cross classes run all over metro Atlanta. Pick one that covers First Aid, CPR, and AED and gives you a certificate.",
+     cost:"Varies by class",where:"Locations across metro Atlanta. Search near ZIP 30331.",link:"https://www.redcross.org/take-a-class",
+     meets:{firstaid:true}}
+  ];
+  const REQ=[["firearms","Firearms"],["firstaid","First Aid / CPR"],["stb","Stop the Bleed"]];
+  const tg=document.getElementById("tgrid");
+  const card=t=>'<article class="tcard'+(t.how?' how':'')+'">'+(t.how?'<span class="howtag">House of Worship</span>':'')+'<div><div class="prov">'+esc(t.provider)+'</div><h3>'+esc(t.title)+'</h3></div><div class="meets">'+
+      REQ.map(([k,l])=>t.meets[k]?'<span class="mb yes">✓ '+l+'</span>':'<span class="mb no" aria-label="Does not count for '+l+'">'+l+'</span>').join('')+
+      '</div><p>'+esc(t.desc)+'</p>'+(t.note?'<p class="tnote">'+esc(t.note)+'</p>':'')+'<dl class="tmeta"><dt>Cost</dt><dd>'+esc(t.cost)+'</dd><dt>Format</dt><dd>'+esc(t.format||"In person")+'</dd><dt>Where</dt><dd>'+esc(t.where)+'</dd></dl><a class="btn primary" href="'+esc(t.link)+'" target="_blank" rel="noopener">Register ↗</a></article>';
+  const group=(h,p,list,cls)=>list.length?'<section class="tgroup'+(cls?' '+cls:'')+'"><h3>'+h+'</h3>'+(p?'<p>'+p+'</p>':'')+'<div class="tgrid">'+list.map(card).join('')+'</div></section>':'';
+  const renderT=f=>{
+    if(f==="all"){tg.innerHTML=group("Built for church security teams","Start here. These are made for teams like ours.",TRAINING.filter(t=>t.how),"hw")+
+      group("Firearms","",TRAINING.filter(t=>!t.how&&(t.meets.firearms||/handgun|pistol|force/i.test(t.title))))+
+      group("Medical","",TRAINING.filter(t=>!t.how&&(t.meets.stb||t.meets.firstaid)));return;}
+    const list=TRAINING.filter(t=>f==="how"?t.how:t.meets[f]);
+    tg.innerHTML=list.length?'<div class="tgrid">'+list.map(card).join('')+'</div>':'<p class="intro">No classes listed for this one yet.</p>';};
+  document.querySelectorAll(".filt").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filt").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderT(b.dataset.f);}));
+  renderT("all");
+
+  // ---------- Tabs ----------
+  const VIEWS=["home","due","calendar","training","playbook"];
+  const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics"};
+  const dlg=document.getElementById("emerg");
+  const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
+  document.getElementById("ebtn").addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}});
+  document.getElementById("em-close").addEventListener("click",closeE);
+  dlg.addEventListener("click",e=>{if(e.target===dlg)closeE();});
+  const route=(scroll)=>{let v=location.hash.slice(1);let sop=null,target=null;
+    if(/^sop-/.test(v)){sop=document.getElementById(v);target=sop;v="playbook";}
+    else if(ALIAS[v]){target=document.getElementById(ALIAS[v]);v="playbook";}
+    if(!VIEWS.includes(v))v="home";
+    closeE();
+    document.querySelectorAll("[data-view]").forEach(el=>el.hidden=el.dataset.view!==v);
+    document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+    if(sop)sop.open=true;
+    if(target){target.scrollIntoView({block:"start"});window.scrollBy(0,innerWidth>640?-70:-16);}
+    else if(scroll)window.scrollTo(0,0);};
+  window.addEventListener("hashchange",()=>route(true));
+  route(false);
+
+  // Month grids
+  const wrap=document.getElementById("months");
+  [10,11].forEach(m=>{const y=2026,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
+    for(let i=0;i<first;i++)cells+='<div></div>';
+    for(let d=1;d<=n;d++){const wd=new Date(y,m,d).getDay();const lbl=MS[m]+" "+d+", 2026"+(wd===1?": SWOT 7pm on Zoom":"");cells+='<div class="day'+(wd===1?' swot':'')+'" title="'+lbl+'" aria-label="'+lbl+'">'+d+'</div>';}
+    const el=document.createElement("article");el.className="month";
+    el.innerHTML='<div class="mh"><b>'+M[m]+' 2026</b></div><div class="grid">'+cells+'</div><div class="notes"><div><span class="sw s-swot"></span><span>SWOTs every Monday at 7pm on Zoom. No team meeting or outing this month.</span></div></div>';
+    wrap.appendChild(el);});
+  for(let m=0;m<12;m++){
+    const first=new Date(Y,m,1).getDay(), n=new Date(Y,m+1,0).getDate();
+    let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
+    for(let i=0;i<first;i++) cells+='<div></div>';
+    const notes=[];
+    for(let d=1;d<=n;d++){
+      const k=key(m,d), wd=new Date(Y,m,d).getDay(); let cls="day", label=fmt(m,d);
+      if(k===summit){cls+=" summit";label+=": AB Summit";notes.push('<div><span class="sw s-summit"></span><span><b>'+MS[m]+' '+d+'</b> AB Summit</span></div>');}
+      else if(outingDay[m]===d){cls+=" outing";label+=": "+outingMonths[m]+" Outing (tentative)";notes.push('<div><span class="sw s-outing"></span><span><b>'+MS[m]+' '+d+'</b> '+outingMonths[m]+' Outing · <span class="tent">Tentative</span></span></div>');}
+      else if(keyDays[k]){cls+=" keyday";label+=": "+keyDays[k];notes.push('<div><span class="sw s-all"></span><span><b>'+MS[m]+' '+d+'</b> '+keyDays[k]+'</span></div>');}
+      else if(access[m]===d){cls+=" access"; if(accessCancel[m]){cls+=" acx";label+=": Access cancelled ("+accessCancel[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--access)"></span><span><b>'+MS[m]+' '+d+'</b> Access <span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></div>');} else {label+=": Access 7pm, mostly virtual";notes.push('<div><span class="sw s-access"></span><span><b>'+MS[m]+' '+d+'</b> Access, 7pm · virtual unless announced</span></div>');}}
+      else if(meets[m]===d){cls+=" meet"; if(meetFlags[m]){cls+=" mcx";label+=": Team Meeting cancelled ("+meetFlags[m]+")";notes.push('<div><span class="sw s-cancel" style="border-color:var(--meet)"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting <span class="cx">Cancelled</span> · '+meetFlags[m]+'</span></div>');} else {label+=": Team Meeting 10am to 2pm";notes.push('<div><span class="sw s-meet"></span><span><b>'+MS[m]+' '+d+'</b> Team Meeting, 10am–2pm</span></div>');}}
+      else if(wd===1){cls+=" swot";label+=": SWOT 7pm"; if(holidayMon[k]){cls+=" hol";label=fmt(m,d)+": SWOT cancelled, holiday ("+holidayMon[k]+")";notes.push('<div><span class="sw s-cancel"></span><span><b>'+MS[m]+' '+d+'</b> SWOT <span class="cx">Cancelled · Holiday</span> ('+holidayMon[k]+')</span></div>');}}
+      if(m===0&&d>=11&&d<=16){cls+=" fast";label+=" · Consecration Week (tentative)"; if(d===11) notes.push('<div><span class="sw s-fast"></span><span><b>Jan 11–16</b> Consecration Week · church-wide fast · <span class="tent" style="color:var(--fast)">Tentative</span></span></div>');}
+      cells+='<div class="'+cls+'" title="'+label+'" aria-label="'+label+'">'+d+'</div>';
+    }
+    const el=document.createElement("article");el.className="month";
+    const tb=(tbd[m]||[]).map(t=>'<span class="badge tbd">'+t+'</span>').join('');
+    el.innerHTML='<div class="mh"><b>'+M[m]+'</b><span class="badges">'+tb+(outingMonths[m]?'<span class="badge">'+outingMonths[m]+' Outing · '+MS[m]+' '+outingDay[m]+'</span>':'')+'</span></div><div class="grid">'+cells+'</div>'+(notes.length?'<div class="notes">'+notes.join("")+'</div>':'');
+    wrap.appendChild(el);
+  }
+})();
+</script>
