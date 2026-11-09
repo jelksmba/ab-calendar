@@ -623,8 +623,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm · Zoom",zoom:true,h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
   Object.keys(access).forEach(m=>{m=+m;add(m,access[m],{t:"Access",sub:"7pm · virtual unless announced",h:19,eh:20,type:"access",c:"var(--access)",off:accessCancel[m]?"Cancelled · Holiday ("+accessCancel[m]+")":null});});
   Object.keys(outingDay).forEach(m=>{m=+m;add(m,outingDay[m],{t:outingMonths[m]+" Team Outing",sub:"Tentative",type:"outing",c:"var(--outing)"});});
-  // December 2026: SWOTs only (no team meeting, no outing)
-  [7,14,21,28].forEach(d=>EV.push({y:2026,m:11,d,s:new Date(2026,11,d,19),e:new Date(2026,11,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));
+  // November & December 2026: SWOTs only (no team meeting, no outing)
+  [[10,2],[10,9],[10,16],[10,23],[10,30],[11,7],[11,14],[11,21],[11,28]].forEach(([m,d])=>EV.push({y:2026,m,d,s:new Date(2026,m,d,19),e:new Date(2026,m,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));
   EV.sort((a,b)=>a.s-b.s);
   const fmtD=x=>DW[x.getDay()]+", "+MS[x.getMonth()]+" "+x.getDate();
   const ZOOM="https://us02web.zoom.us/j/84578356424";
@@ -762,12 +762,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   // Month grids
   const wrap=document.getElementById("months");
-  {const y=2026,m=11,first=new Date(y,m,1).getDay();let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
+  [10,11].forEach(m=>{const y=2026,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate();let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
     for(let i=0;i<first;i++)cells+='<div></div>';
-    for(let d=1;d<=31;d++){const wd=new Date(y,m,d).getDay();const lbl="Dec "+d+", 2026"+(wd===1?": SWOT 7pm on Zoom":"");cells+='<div class="day'+(wd===1?' swot':'')+'" title="'+lbl+'" aria-label="'+lbl+'">'+d+'</div>';}
+    for(let d=1;d<=n;d++){const wd=new Date(y,m,d).getDay();const lbl=MS[m]+" "+d+", 2026"+(wd===1?": SWOT 7pm on Zoom":"");cells+='<div class="day'+(wd===1?' swot':'')+'" title="'+lbl+'" aria-label="'+lbl+'">'+d+'</div>';}
     const el=document.createElement("article");el.className="month";
-    el.innerHTML='<div class="mh"><b>December 2026</b></div><div class="grid">'+cells+'</div><div class="notes"><div><span class="sw s-swot"></span><span>SWOTs every Monday at 7pm on Zoom. No team meeting or outing this month.</span></div></div>';
-    wrap.appendChild(el);}
+    el.innerHTML='<div class="mh"><b>'+M[m]+' 2026</b></div><div class="grid">'+cells+'</div><div class="notes"><div><span class="sw s-swot"></span><span>SWOTs every Monday at 7pm on Zoom. No team meeting or outing this month.</span></div></div>';
+    wrap.appendChild(el);});
   for(let m=0;m<12;m++){
     const first=new Date(Y,m,1).getDay(), n=new Date(Y,m+1,0).getDate();
     let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");

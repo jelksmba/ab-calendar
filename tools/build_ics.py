@@ -114,10 +114,10 @@ for m in range(1, 13):
     else:
         add(f"meet-{d:%Y%m%d}", "AB Team Meeting", d, hours=((10, 0), (14, 0)))
 
-# Monday SWOTs, 7pm on Zoom (Dec 2026 through Dec 2027)
+# Monday SWOTs, 7pm on Zoom (Nov 2026 through Dec 2027)
 ZOOM = "https://us02web.zoom.us/j/84578356424"
 SWOT_DESC = f"Join on Zoom: {ZOOM}\nMeeting ID: 845 7835 6424"
-d = date(2026, 12, 7)
+d = date(2026, 11, 2)
 while d.year <= Y:
     if d in HOLIDAY_MONDAYS:
         add(f"swot-{d:%Y%m%d}", f"CANCELLED - SWOT (Holiday: {HOLIDAY_MONDAYS[d]})", d,
