@@ -1,6 +1,6 @@
-# AB Calendar
+# AB Dashboard
 
-Armor Bearers key dates: Summit, team meetings, Monday SWOTs, Access nights, key service dates, and quarterly outings.
+Armor Bearers dashboard: upcoming events, the full 2027 calendar, the AB reference guide, and SOP cheat sheets.
 
 Live page: https://jelksmba.github.io/ab-calendar/
 
