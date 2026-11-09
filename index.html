@@ -576,6 +576,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <div class="panel"><h3>Team A · Early</h3><dl class="sbt"><dt>6:00am</dt><dd>Arrive</dd><dt>6:15am</dt><dd>Perimeter checks (20 min)</dd><dt>6:40am</dt><dd>Pray-in</dd><dt>6:45am</dt><dd>Team briefing</dd><dt>7:15am</dt><dd>Radio check</dd></dl></div>
       <div class="panel"><h3>Team B · Mid-morning</h3><dl class="sbt"><dt>9:15am</dt><dd>Arrive</dd><dt>9:30am</dt><dd>Pray-in</dd><dt>9:35am</dt><dd>Team briefing</dd><dt>9:40am</dt><dd>Radio check</dd></dl></div>
       <div class="panel"><h3>Uniform</h3><ul><li>All black top, minimal logo</li><li>Black or dark gray pants or shorts</li><li>Black tactical boots or sneakers</li></ul></div>
+      <div class="panel" id="sunday-gear"><h3>Gear on you</h3><p class="ainote" style="margin:0 0 6px">Carry all of this every Sunday, on top of your uniform.</p><ul><li>Radio</li><li>Headset</li><li>Armored vest</li><li>Medical gloves</li><li>IFAK (first aid kit)</li><li>Flashlight</li><li>Knife</li><li>Notebook</li><li>Ballpoint pen</li><li><b>If approved to carry:</b> holstered concealed carry firearm and 1 to 2 spare magazines</li></ul></div>
       <div class="panel"><h3>Late or out</h3><ul><li>Arriving after your call time counts as tardy.</li><li>15+ minutes late: check in with a team lead before taking a post.</li><li>Can't serve? Tell leadership by Friday at 12pm.</li><li>Up to 3 unexcused tardies and 2 unexcused absences per 3 months.</li></ul></div>
     </div>
   </section>
@@ -812,6 +813,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
       <details class="faq" id="faq-how-often"><summary>How often do I need to serve?</summary><div class="fa"><p>At least 2 of 4 Sundays a month. On your Sundays, serve 2 of the 3 gatherings unless leadership approves otherwise.</p></div></details>
       <details class="faq" id="faq-arrive"><summary>What time do I need to arrive?</summary><div class="fa"><ul><li><b>Team A (early):</b> arrive 6:00am. Perimeter checks 6:15, pray-in 6:40, briefing 6:45, radio check 7:15.</li><li><b>Team B (mid-morning):</b> arrive 9:15am. Pray-in 9:30, briefing 9:35, radio check 9:40.</li></ul><p><a href="#basics">See Sunday Basics</a></p></div></details>
       <details class="faq" id="faq-wear"><summary>What do I wear?</summary><div class="fa"><p>All black top with a minimal logo, black or dark gray pants or shorts, and black tactical boots or sneakers.</p></div></details>
+      <details class="faq" id="faq-gear"><summary>What gear do I need on me?</summary><div class="fa"><p>On top of your uniform, carry: a radio, headset, armored vest, medical gloves, IFAK (first aid kit), flashlight, knife, notebook, and a ballpoint pen.</p><p>If you're approved to carry, also bring your holstered concealed carry firearm and 1 to 2 spare magazines. Don't carry on post without approval.</p><p><a href="#gear">See the gear list</a></p></div></details>
       <details class="faq" id="faq-late"><summary>What if I'm running late?</summary><div class="fa"><p>Arriving after your call time counts as tardy. If you're 15 or more minutes late, check in with a team lead before you take a post. Up to 3 unexcused tardies are allowed in 3 months.</p></div></details>
       <details class="faq" id="faq-out"><summary>What if I can't make my Sunday?</summary><div class="fa"><p>Tell leadership by Friday at 12pm. Absences you report by then aren't counted against you. Up to 2 unexcused absences are allowed in 3 months.</p></div></details>
       <details class="faq" id="faq-assign"><summary>Where do I accept my AB assignment?</summary><div class="fa"><p>In Church Center, by end of day Tuesday. Tap your profile picture to see your schedule, then tap Accept.</p><p><a href="https://2819church.churchcenter.com/me" target="_blank" rel="noopener">Open Church Center ↗</a></p></div></details>
@@ -1176,7 +1178,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
 
   // ---------- Tabs ----------
   const VIEWS=["home","due","calendar","training","playbook","faq"];
-  const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics"};
+  const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics",gear:"sunday-gear"};
   const dlg=document.getElementById("emerg");
   const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
   document.querySelectorAll(".ebtn").forEach(b=>b.addEventListener("click",()=>{try{dlg.showModal();}catch(e){dlg.setAttribute("open","");}}));
