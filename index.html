@@ -179,6 +179,30 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tgroup>h3{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
 .tgroup>p{margin:-6px 0 0;color:var(--muted);font-size:14px}
 .tlist{display:grid;gap:28px}
+.zoom{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px}
+.zoom .zid{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums;user-select:all}
+.dues{display:grid;gap:12px}
+.due{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.due.isdone h3{text-decoration:line-through;color:var(--muted)}
+.due h3{margin:0;font-size:17px}
+.due .w{color:var(--muted);font-size:14px}
+.pill{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;white-space:nowrap;background:var(--swot-soft);color:var(--ink)}
+.pill.today{background:var(--summit);color:#fff}
+.pill.tom{background:var(--brass-soft);color:var(--brass)}
+.pill.ok{background:var(--outing-soft);color:var(--outing)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;white-space:nowrap}
+.chk input{width:20px;height:20px;accent-color:var(--outing);cursor:pointer}
+@media (max-width:560px){.due{grid-template-columns:auto minmax(0,1fr)}.due .pill,.due .chk{grid-column:2;justify-self:start}}
+.wk7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wd{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 6px;min-height:92px;display:grid;align-content:start;gap:4px;min-width:0}
+.wd.now{border:2px solid var(--ink)}
+.wd b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.wd .n{font:700 22px/1 var(--display);font-variant-numeric:tabular-nums}
+.wchip{font-size:11px;font-weight:700;padding:3px 5px;border-radius:4px;color:#fff;background:var(--c);line-height:1.2;overflow-wrap:anywhere}
+.wchip.done{opacity:.45;text-decoration:line-through}
+.dh{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.dh li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-weight:600;font-size:14px}
+.dh li.isdone span:nth-child(2){text-decoration:line-through;color:var(--muted)}
 .tgroup.hw .tgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
 .side{display:grid;gap:16px;min-width:0}
 .res{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -215,11 +239,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <header>
     <div class="eyebrow">Armor Bearers · 2027</div>
     <h1>AB Dashboard</h1>
-    <p class="sub">What's coming up, every event for the year, training, the reference guide, and our SOPs, all in one place.</p>
+    <p class="sub">What's coming up, what's due, every event, training, the reference guide, and our SOPs, all in one place.</p>
   </header>
 
   <nav class="tabs" aria-label="Dashboard sections">
     <a class="tab" href="#home" data-tab="home">Home</a>
+    <a class="tab" href="#due" data-tab="due">Due Soon</a>
     <a class="tab" href="#calendar" data-tab="calendar">Upcoming Events</a>
     <a class="tab" href="#training" data-tab="training">Training</a>
     <a class="tab" href="#reference" data-tab="reference">Reference Guide</a>
@@ -236,6 +261,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <div><a class="btn" href="#calendar">See all upcoming events</a></div>
       </section>
       <div class="side">
+        <section class="panel" aria-labelledby="dueh-h">
+          <h2 id="dueh-h">Due this week</h2>
+          <ul class="dh" id="due-home"></ul>
+          <div><a class="btn" href="#due">Open Due Soon</a></div>
+        </section>
         <section class="panel" aria-labelledby="res-h">
           <h2 id="res-h">Resources</h2>
           <ul class="res">
@@ -502,6 +532,18 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     </section>
   </div>
 
+  <div data-view="due" hidden>
+    <div>
+      <h2>Due Soon</h2>
+      <p class="intro">Weekly to-dos for every AB. Check them off as you go. Your checkmarks are saved on this device and reset each week.</p>
+    </div>
+    <div class="dues" id="due-list"></div>
+    <section class="panel" aria-labelledby="wk-h" style="display:grid;gap:12px">
+      <h2 id="wk-h" style="margin:0;font-size:20px">This week at a glance</h2>
+      <div class="wk7" id="due-week"></div>
+    </section>
+  </div>
+
   <div data-view="training" hidden>
     <div>
       <h2>Training Opportunities</h2>
@@ -578,10 +620,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   add(0,11,{t:"Consecration Week",sub:"Church-wide fast · Jan 11–16 · Tentative",type:"fast",c:"var(--fast)",endD:16});
   Object.keys(keyDays).forEach(k=>{const [m,d]=k.split("-").map(Number);add(m,d,{t:keyDays[k],type:"key",c:"var(--brass)",ah:/All Hands/.test(keyDays[k])});});
   Object.keys(meets).forEach(m=>{m=+m;add(m,meets[m],{t:"Team Meeting",sub:"10am–2pm",h:10,eh:14,type:"meet",c:"var(--meet)",off:meetFlags[m]?"Cancelled · "+meetFlags[m]:null});});
-  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm",h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
+  for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm · Zoom",zoom:true,h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
   Object.keys(access).forEach(m=>{m=+m;add(m,access[m],{t:"Access",sub:"7pm · virtual unless announced",h:19,eh:20,type:"access",c:"var(--access)",off:accessCancel[m]?"Cancelled · Holiday ("+accessCancel[m]+")":null});});
   Object.keys(outingDay).forEach(m=>{m=+m;add(m,outingDay[m],{t:outingMonths[m]+" Team Outing",sub:"Tentative",type:"outing",c:"var(--outing)"});});
+  // December 2026: SWOTs only (no team meeting, no outing)
+  [7,14,21,28].forEach(d=>EV.push({y:2026,m:11,d,s:new Date(2026,11,d,19),e:new Date(2026,11,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));
   EV.sort((a,b)=>a.s-b.s);
+  const fmtD=x=>DW[x.getDay()]+", "+MS[x.getMonth()]+" "+x.getDate();
+  const ZOOM="https://us02web.zoom.us/j/84578356424";
 
   const now=new Date(), day0=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());
   const daysTo=x=>Math.round((day0(x)-day0(now))/864e5);
@@ -592,10 +638,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   const nx=document.getElementById("next-up");
   if(live[0]){const e=live[0];
     nx.innerHTML='<div class="dateblock" style="--c:'+e.c+'"><div class="db-m">'+MS[e.m]+'</div><div class="db-d">'+e.d+'</div><div class="db-w">'+DW[e.s.getDay()]+'</div></div>'+
-      '<div style="min-width:0"><div class="eyebrow">Next up</div><h2>'+esc(e.t)+'</h2><p class="meta">'+fmt(e.m,e.d)+(e.sub?' · '+esc(e.sub):'')+'</p><span class="when'+(daysTo(e.s)<=0?' today':'')+'">'+rel(e.s)+'</span></div>';
+      '<div style="min-width:0"><div class="eyebrow">Next up</div><h2>'+esc(e.t)+'</h2><p class="meta">'+fmtD(e.s)+(e.sub?' · '+esc(e.sub):'')+'</p><span class="when'+(daysTo(e.s)<=0?' today':'')+'">'+rel(e.s)+'</span>'+(e.zoom?'<div class="zoom"><a class="btn primary" href="'+ZOOM+'" target="_blank" rel="noopener">Join on Zoom ↗</a><span class="zid">Meeting ID 845 7835 6424</span></div>':'')+'</div>';
   } else nx.innerHTML='<div style="grid-column:1/-1"><div class="eyebrow">Next up</div><h2>That\'s a wrap on 2027</h2><p class="meta">The 2028 calendar will show up here once it\'s set.</p></div>';
 
-  const tile=(label,c,e)=>'<div class="tile"><div class="lab"><span class="dot" style="--c:'+c+'"></span>'+label+'</div>'+(e?'<div class="big">'+(daysTo(e.s)<=0?'Today':daysTo(e.s)+'<small>'+(daysTo(e.s)===1?'day':'days')+'</small>')+'</div><div class="dt">'+fmt(e.m,e.d)+'</div>':'<div class="big" style="font-size:24px">Done</div><div class="dt">Nothing left in 2027</div>')+'</div>';
+  const tile=(label,c,e)=>'<div class="tile"><div class="lab"><span class="dot" style="--c:'+c+'"></span>'+label+'</div>'+(e?'<div class="big">'+(daysTo(e.s)<=0?'Today':daysTo(e.s)+'<small>'+(daysTo(e.s)===1?'day':'days')+'</small>')+'</div><div class="dt">'+fmtD(e.s)+'</div>':'<div class="big" style="font-size:24px">Done</div><div class="dt">Nothing left in 2027</div>')+'</div>';
   document.getElementById("tiles").innerHTML=
     tile("AB Summit","var(--summit)",live.find(e=>e.type==="summit"))+
     tile("Team Meeting","var(--meet)",live.find(e=>e.type==="meet"))+
@@ -610,6 +656,30 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     if(w!==lastWk){const lbl=w===thisWk?"This week":w===thisWk+6048e5?"Next week":"Week of "+MS[new Date(w).getMonth()]+" "+new Date(w).getDate();html+='<li class="wk">'+lbl+'</li>';lastWk=w;}
     html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
   ul.innerHTML=html||'<li><div></div><div class="us">Nothing else on the calendar for 2027.</div></li>';
+
+  // ---------- Due soon ----------
+  const DUE=[
+    {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)"},
+    {id:"assign",t:"Accept your weekly assignment",when:"Every Tuesday by end of day",short:"Accept assignment",wd:2,c:"var(--meet)"},
+    {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)"}
+  ];
+  const ymd=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
+  const nextDue=wd=>{const d=day0(now);d.setDate(d.getDate()+((wd-d.getDay()+7)%7));return d;};
+  const isDone=(id,d)=>{try{return localStorage.getItem("ab-due-"+id+"-"+ymd(d))==="1";}catch(e){return false;}};
+  const setDone=(id,d,v)=>{try{v?localStorage.setItem("ab-due-"+id+"-"+ymd(d),"1"):localStorage.removeItem("ab-due-"+id+"-"+ymd(d));}catch(e){}};
+  const pill=(d,done)=>{if(done)return '<span class="pill ok">✓ Done</span>';const n=daysTo(d);return n===0?'<span class="pill today">Due today</span>':n===1?'<span class="pill tom">Due tomorrow</span>':'<span class="pill">Due '+DW[d.getDay()]+' · in '+n+' days</span>';};
+  const renderDue=()=>{
+    const items=DUE.map(x=>Object.assign({due:nextDue(x.wd)},x)).sort((a,b)=>a.due-b.due);
+    items.forEach(x=>x.done=isDone(x.id,x.due));
+    document.getElementById("due-list").innerHTML=items.map(x=>'<div class="due'+(x.done?' isdone':'')+'"><span class="dot" style="--c:'+x.c+'"></span><div style="min-width:0"><h3>'+x.t+'</h3><div class="w">'+x.when+' · next due '+fmtD(x.due)+'</div></div>'+pill(x.due,x.done)+'<label class="chk"><input type="checkbox" id="due-'+x.id+'" data-id="'+x.id+'"'+(x.done?' checked':'')+'> Done</label></div>').join('');
+    document.getElementById("due-home").innerHTML=items.map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+x.short+'</span>'+pill(x.due,x.done)+'</li>').join('');
+    const ws=wkStart(now);let wk="";
+    for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const today=+d===+day0(now);
+      wk+='<div class="wd'+(today?' now':'')+'"><b>'+DW[d.getDay()]+'</b><span class="n">'+d.getDate()+'</span>'+DUE.filter(x=>x.wd===d.getDay()).map(x=>'<span class="wchip'+(isDone(x.id,d)?' done':'')+'" style="--c:'+x.c+'">'+x.short+'</span>').join('')+'</div>';}
+    document.getElementById("due-week").innerHTML=wk;
+    document.querySelectorAll("#due-list input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{const it=items.find(x=>x.id===cb.dataset.id);setDone(it.id,it.due,cb.checked);renderDue();const n=document.getElementById("due-"+it.id);if(n)n.focus();}));
+  };
+  renderDue();
 
   // ---------- Training ----------
   // To add a class: copy one block below and fill it in. meets: true = counts toward that yearly requirement.
@@ -679,7 +749,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   renderT("all");
 
   // ---------- Tabs ----------
-  const VIEWS=["home","calendar","training","reference","sops"];
+  const VIEWS=["home","due","calendar","training","reference","sops"];
   const route=(scroll)=>{let v=location.hash.slice(1);let sop=null;
     if(/^sop-/.test(v)){sop=document.getElementById(v);v="sops";}
     if(!VIEWS.includes(v))v="home";
@@ -692,6 +762,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   // Month grids
   const wrap=document.getElementById("months");
+  {const y=2026,m=11,first=new Date(y,m,1).getDay();let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");
+    for(let i=0;i<first;i++)cells+='<div></div>';
+    for(let d=1;d<=31;d++){const wd=new Date(y,m,d).getDay();const lbl="Dec "+d+", 2026"+(wd===1?": SWOT 7pm on Zoom":"");cells+='<div class="day'+(wd===1?' swot':'')+'" title="'+lbl+'" aria-label="'+lbl+'">'+d+'</div>';}
+    const el=document.createElement("article");el.className="month";
+    el.innerHTML='<div class="mh"><b>December 2026</b></div><div class="grid">'+cells+'</div><div class="notes"><div><span class="sw s-swot"></span><span>SWOTs every Monday at 7pm on Zoom. No team meeting or outing this month.</span></div></div>';
+    wrap.appendChild(el);}
   for(let m=0;m<12;m++){
     const first=new Date(Y,m,1).getDay(), n=new Date(Y,m+1,0).getDate();
     let cells=DW.map(d=>'<div class="dow">'+d[0]+'</div>').join("");

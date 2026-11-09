@@ -78,6 +78,9 @@ def add(uid, summary, start, end=None, hours=None, desc=None, free=False, tentat
         lines.append(f"DTEND;VALUE=DATE:{(end or start + timedelta(days=1)):%Y%m%d}")
     if desc:
         lines.append(f"DESCRIPTION:{esc(desc)}")
+        if "zoom.us" in desc:
+            lines.append("LOCATION:Zoom")
+            lines.append("URL:https://us02web.zoom.us/j/84578356424")
     if tentative:
         lines.append("STATUS:TENTATIVE")
     lines.append(f"TRANSP:{'TRANSPARENT' if free or not hours else 'OPAQUE'}")
@@ -111,14 +114,16 @@ for m in range(1, 13):
     else:
         add(f"meet-{d:%Y%m%d}", "AB Team Meeting", d, hours=((10, 0), (14, 0)))
 
-# Monday SWOTs, 7pm
-d = nth_weekday(1, 0, 1)
-while d.year == Y:
+# Monday SWOTs, 7pm on Zoom (Dec 2026 through Dec 2027)
+ZOOM = "https://us02web.zoom.us/j/84578356424"
+SWOT_DESC = f"Join on Zoom: {ZOOM}\nMeeting ID: 845 7835 6424"
+d = date(2026, 12, 7)
+while d.year <= Y:
     if d in HOLIDAY_MONDAYS:
         add(f"swot-{d:%Y%m%d}", f"CANCELLED - SWOT (Holiday: {HOLIDAY_MONDAYS[d]})", d,
             hours=((19, 0), (20, 0)), free=True, desc="Cancelled because it falls on a holiday.")
     else:
-        add(f"swot-{d:%Y%m%d}", "AB SWOT", d, hours=((19, 0), (20, 0)))
+        add(f"swot-{d:%Y%m%d}", "AB SWOT (Zoom)", d, hours=((19, 0), (20, 0)), desc=SWOT_DESC)
     d += timedelta(weeks=1)
 
 # Access: fourth Thursday, 7pm
