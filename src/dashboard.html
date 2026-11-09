@@ -508,7 +508,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   <div data-view="calendar" hidden>
   <div class="calbar"><h2>Calendar</h2><div class="seg" role="group" aria-label="Calendar view"><button type="button" data-cv="list" aria-pressed="true">List</button><button type="button" data-cv="month" aria-pressed="false">Month</button></div></div>
   <section class="panel" id="cal-list" aria-label="Upcoming events list">
-    <label class="chk" style="white-space:normal"><input type="checkbox" id="show-swot"> Show weekly SWOTs (every Monday, 7pm on Zoom)</label>
+    <label class="chk" style="white-space:normal"><input type="checkbox" id="show-swot"> Show each SWOT on its own line (every Monday, 7pm on Zoom)</label>
     <ol class="up" id="agenda"></ol>
   </section>
   <div id="cal-months" style="display:grid;gap:28px" hidden>
@@ -1017,7 +1017,13 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   // ---------- Calendar list view ----------
   const ag=document.getElementById("agenda"),sw=document.getElementById("show-swot");
   const renderAgenda=()=>{let h="",last="";
-    EV.filter(e=>e.e>now&&(sw.checked||e.type!=="swot")).forEach(e=>{const mk=e.s.getFullYear()+"-"+e.s.getMonth();
+    const up=EV.filter(e=>e.e>now).sort((a,b)=>a.s-b.s),seen=new Set();
+    up.forEach(e=>{const mk=e.s.getFullYear()+"-"+e.s.getMonth();
+      if(e.type==="swot"&&!sw.checked){if(seen.has(mk))return;seen.add(mk);
+        const ms=up.filter(x=>x.type==="swot"&&x.s.getFullYear()+"-"+x.s.getMonth()===mk);
+        const on=ms.filter(x=>!x.off).map(x=>x.s.getDate()),off=ms.filter(x=>x.off).map(x=>MS[x.s.getMonth()]+" "+x.s.getDate()+(x.off?" ("+((x.off.match(/\(([^)]+)\)/)||[,x.off])[1])+")":""));
+        if(mk!==last){h+='<li class="wk">'+M[e.s.getMonth()]+' '+e.s.getFullYear()+'</li>';last=mk;}
+        h+='<li><div class="ud"><span>Mon</span><b>'+(on[0]||e.s.getDate())+'</b><span>'+MS[e.s.getMonth()]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:var(--swot)"></span><span>SWOTs '+(on.length?'· '+MS[e.s.getMonth()]+' '+on.join(', '):'')+'</span></div><div class="us">Mondays · 7pm · Zoom'+(off.length?' · <span class="cx">No SWOT '+esc(off.join(', '))+'</span>':'')+'</div></div></li>';return;}
       if(mk!==last){h+='<li class="wk">'+M[e.s.getMonth()]+' '+e.s.getFullYear()+'</li>';last=mk;}
       h+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.s.getDate()+'</b><span>'+MS[e.s.getMonth()]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
     ag.innerHTML=h||'<li><div></div><div class="us">Nothing coming up.</div></li>';};
