@@ -179,6 +179,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tgroup>h3{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
 .tgroup>p{margin:-6px 0 0;color:var(--muted);font-size:14px}
 .tlist{display:grid;gap:28px}
+.serm h3{margin:0;font:700 26px/1.1 var(--display);letter-spacing:.02em}
+.serm .meta{margin:4px 0 0;color:var(--muted);font-size:14px}
+.serm p{margin:0}
+.serm ul{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+.serm h4{margin:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ainote{font-size:12px;color:var(--muted);font-style:italic}
 .zoom{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px}
 .zoom .zid{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums;user-select:all}
 .dues{display:grid;gap:12px}
@@ -255,11 +261,26 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <section class="panel next" id="next-up" aria-label="Next up"></section>
     <div class="tiles" id="tiles"></div>
     <div class="dash-cols">
+      <div class="side">
       <section class="panel" aria-labelledby="up-h">
-        <h2 id="up-h">Coming up <small style="font:600 14px var(--body);color:var(--muted)">· next 2 weeks</small></h2>
+        <h2 id="up-h">Coming up <small style="font:600 14px var(--body);color:var(--muted)">· this week and next</small></h2>
         <ol class="up" id="up-list"></ol>
         <div><a class="btn" href="#calendar">See all upcoming events</a></div>
       </section>
+        <section class="panel serm" aria-labelledby="serm-h">
+          <div class="eyebrow" id="serm-h">Latest sermon · Sun, Nov 1</div>
+          <div><h3>Prayer In Christ</h3><p class="meta">IN CHRIST series · Ephesians 1:15–23 · Milton James</p></div>
+          <p>Paul prays that believers would move past knowing <i>about</i> God to actually knowing Him. Sin makes holy things feel ordinary, so we need God to open the eyes of our hearts. When He does, we see the hope we're called to, an inheritance that can't fade, and the power that raised Jesus and put Him over every authority.</p>
+          <h4>Takeaways</h4>
+          <ul>
+            <li>Read Scripture for yourself first, not just to teach others.</li>
+            <li>Don't let sin make God's everyday gifts feel common.</li>
+            <li>Christ is the head of the church. We serve from His strength, not fear or performance.</li>
+          </ul>
+          <div><a class="btn primary" href="https://www.youtube.com/watch?v=81Z9hdcMZAQ" target="_blank" rel="noopener">Watch on YouTube ↗</a></div>
+          <p class="ainote">Summary written by AI. Watch the full message for everything that was said.</p>
+        </section>
+      </div>
       <div class="side">
         <section class="panel" aria-labelledby="dueh-h">
           <h2 id="dueh-h">Due this week</h2>
@@ -275,13 +296,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
             <li><a href="#sop-medical">Medical Emergency <span>SOP</span></a></li>
             <li><a href="#sop-missing-child">Missing Child <span>SOP</span></a></li>
             <li><a href="#sops">All 7 SOPs <span>→</span></a></li>
-          </ul>
-        </section>
-        <section class="panel" aria-labelledby="tbd-h">
-          <h2 id="tbd-h">Dates coming soon</h2>
-          <ul class="tbdl">
-            <li><b>Baptism</b><span>August · date TBD</span></li>
-            <li><b>Annual National Access</b><span>A Saturday in October · date TBD</span></li>
           </ul>
         </section>
       </div>
@@ -652,11 +666,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   const wkStart=x=>{const t=day0(x);t.setDate(t.getDate()-((t.getDay()+6)%7));return t;};
   const thisWk=+wkStart(now);
   let html="",lastWk=null;
-  const horizon=day0(now);horizon.setDate(horizon.getDate()+15); // today through 14 days out
+  const horizon=wkStart(now);horizon.setDate(horizon.getDate()+14); // through the end of next week (Sunday)
   up.filter(e=>e.s<horizon).forEach(e=>{const w=+wkStart(e.s);
     if(w!==lastWk){const lbl=w===thisWk?"This week":w===thisWk+6048e5?"Next week":"Week of "+MS[new Date(w).getMonth()]+" "+new Date(w).getDate();html+='<li class="wk">'+lbl+'</li>';lastWk=w;}
     html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
-  ul.innerHTML=html||'<li><div></div><div class="us">Nothing scheduled in the next 2 weeks.</div></li>';
+  ul.innerHTML=html||'<li><div></div><div class="us">Nothing scheduled this week or next.</div></li>';
 
   // ---------- Due soon ----------
   const DUE=[
