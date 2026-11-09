@@ -79,6 +79,17 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
 .notes div{display:flex;gap:8px;align-items:baseline}
 .notes .sw{width:10px;height:10px}
 .foot{color:var(--muted);font-size:13px}
+.sync{display:grid;gap:12px}
+.sync h2{margin:0}
+.sync p{margin:0;color:var(--muted);max-width:62ch}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;border:1.5px solid var(--meet);color:var(--meet);background:transparent;font:600 14px var(--body);text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--meet-soft)}
+.btn.primary{background:var(--meet);color:#fff}
+.btn.primary:hover{filter:brightness(1.08);background:var(--meet)}
+.btn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.feed{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.feed code{font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;overflow-wrap:anywhere;user-select:all;min-width:0}
 @media (max-width:420px){.panel{padding:14px}}
 </style>
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>
@@ -104,6 +115,21 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
     <div class="lg"><span class="sw s-outing"></span>Quarterly Outing <small>tentative</small></div>
   </div>
 
+  <section class="panel sync" aria-labelledby="sync-h">
+    <h2 id="sync-h">Add to your calendar</h2>
+    <p>Subscribe once and every AB date lands on your phone. When dates change, your calendar updates on its own.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fjelksmba.github.io%2Fab-calendar%2Fab-calendar.ics" target="_blank" rel="noopener">Google Calendar</a>
+      <a class="btn" href="webcal://jelksmba.github.io/ab-calendar/ab-calendar.ics">iPhone / Apple</a>
+      <a class="btn" href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fjelksmba.github.io%2Fab-calendar%2Fab-calendar.ics&amp;name=AB%20Calendar" target="_blank" rel="noopener">Outlook</a>
+    </div>
+    <div class="feed">
+      <code id="feed-url">https://jelksmba.github.io/ab-calendar/ab-calendar.ics</code>
+      <button class="btn" id="copy-feed" type="button">Copy link</button>
+    </div>
+    <p style="font-size:13px">Button not working? Copy the link and paste it into your calendar app under “Add calendar → From URL” (or “Subscribe”).</p>
+  </section>
+
   <section class="panel">
     <h2>Key dates at a glance</h2>
     <div class="keys" id="keys"></div>
@@ -118,6 +144,14 @@ h2{font-family:var(--display);font-size:24px;margin:0 0 12px;letter-spacing:.02e
 </div>
 
 <script>
+(function(){
+  const b=document.getElementById("copy-feed"), u=document.getElementById("feed-url");
+  b.addEventListener("click",()=>{
+    const done=()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy link",1800);};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(u);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected — press copy";};
+    try{navigator.clipboard.writeText(u.textContent).then(done,sel);}catch(e){sel();}
+  });
+})();
 (function(){
   const Y=2027;
   const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
