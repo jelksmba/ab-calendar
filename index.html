@@ -657,17 +657,23 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   const tile=(label,c,e)=>'<div class="tile"><div class="lab"><span class="dot" style="--c:'+c+'"></span>'+label+'</div>'+(e?'<div class="big">'+(daysTo(e.s)<=0?'Today':daysTo(e.s)+'<small>'+(daysTo(e.s)===1?'day':'days')+'</small>')+'</div><div class="dt">'+fmtD(e.s)+'</div>':'<div class="big" style="font-size:24px">Done</div><div class="dt">Nothing left in 2027</div>')+'</div>';
   document.getElementById("tiles").innerHTML=
-    tile("AB Summit","var(--summit)",live.find(e=>e.type==="summit"))+
-    tile("Team Meeting","var(--meet)",live.find(e=>e.type==="meet"))+
-    tile("Team Outing","var(--outing)",live.find(e=>e.type==="outing"))+
-    tile("All Hands","var(--brass)",live.find(e=>e.ah));
+    tile("Next AB Summit","var(--summit)",live.find(e=>e.type==="summit"))+
+    tile("Next Team Meeting","var(--meet)",live.find(e=>e.type==="meet"))+
+    tile("Next Team Outing","var(--outing)",live.find(e=>e.type==="outing"))+
+    (()=>{const k=live.find(e=>e.type==="key");return tile(k?esc(k.t.replace(" (All Hands)",""))+(k.ah?" · All Hands":""):"Next Key Date","var(--brass)",k);})();
 
   const ul=document.getElementById("up-list");
   const wkStart=x=>{const t=day0(x);t.setDate(t.getDate()-((t.getDay()+6)%7));return t;};
   const thisWk=+wkStart(now);
   let html="",lastWk=null;
   const horizon=wkStart(now);horizon.setDate(horizon.getDate()+14); // through the end of next week (Sunday)
-  up.filter(e=>e.s<horizon).forEach(e=>{const w=+wkStart(e.s);
+  // Sunday Gatherings (home list only, not on the calendar)
+  const SUNS=[];
+  for(let d=day0(now);d<horizon;d.setDate(d.getDate()+1)){if(d.getDay()!==0)continue;
+    const res=d.getFullYear()===2027&&d.getMonth()===2&&d.getDate()===28;
+    const s=new Date(d);s.setHours(res?6:8);const en=new Date(d);en.setHours(res?16:14,30);
+    if(en>now)SUNS.push({m:d.getMonth(),d:d.getDate(),s,e:en,t:res?"Resurrection Sunday Gatherings":"Sunday Gatherings",sub:res?"6am · 8:30am · 11:30am · 2:30pm":"8am · 10:30am · 1pm",c:"var(--ink)"});}
+  up.filter(e=>e.s<horizon).concat(SUNS).sort((a,b)=>a.s-b.s).forEach(e=>{const w=+wkStart(e.s);
     if(w!==lastWk){const lbl=w===thisWk?"This week":w===thisWk+6048e5?"Next week":"Week of "+MS[new Date(w).getMonth()]+" "+new Date(w).getDate();html+='<li class="wk">'+lbl+'</li>';lastWk=w;}
     html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
   ul.innerHTML=html||'<li><div></div><div class="us">Nothing scheduled this week or next.</div></li>';
