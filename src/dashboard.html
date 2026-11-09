@@ -133,6 +133,44 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ebtn:hover{filter:brightness(1.08)}
 .ebtn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 .ebtn-m{display:none}
+.askbar{display:flex;align-items:center;gap:10px;padding:12px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);text-decoration:none;font-size:15px}
+.askbar:hover{border-color:var(--meet);color:var(--ink)}
+.askbar:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.askbar svg{flex:none}
+.ask{display:grid;gap:12px;min-width:0}
+.ask>*{min-width:0}
+.sres,.sr{min-width:0}
+.ask h2{margin:0}
+.askf{display:flex;gap:8px}
+.askf input{flex:1;min-width:0;font:16px var(--body);padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.askf input:focus{outline:3px solid var(--brass);outline-offset:1px;border-color:transparent}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.chips button{white-space:nowrap;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:6px 12px;font:600 13px var(--body);cursor:pointer}
+.chat{display:grid;gap:10px}
+.bub{padding:10px 14px;border-radius:12px;max-width:100%;overflow-wrap:anywhere;line-height:1.5}
+.bub.q{justify-self:end;background:var(--ink);color:var(--bg);max-width:85%}
+.bub.a{background:var(--bg);border:1px solid var(--line)}
+.bub.a.thinking{color:var(--muted);font-style:italic}
+.bub ul{margin:6px 0;padding-left:20px}
+.sres{display:grid;gap:8px}
+.sres h3{margin:4px 0 0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sr{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--bg)}
+.sr:hover{border-color:var(--meet)}
+.sr b{display:block}
+.sr span{display:block;color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr small{color:var(--brass);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.faqg{display:grid;gap:8px}
+.faqg>h3{margin:10px 0 2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
+.faq{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.faq summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:600 22px var(--body);color:var(--muted)}
+.faq[open] summary::after{content:"\2212"}
+.faq summary:focus-visible{outline:3px solid var(--brass);outline-offset:2px;border-radius:10px}
+.faq .fa{padding:0 16px 14px;display:grid;gap:8px;max-width:70ch}
+.faq .fa p,.faq .fa ul{margin:0}
+.faq .fa ul{padding-left:20px}
+.faq .fa a{color:var(--meet);font-weight:600}
 .devo{display:grid;gap:12px}
 .devo h3{margin:0;font:700 26px/1.1 var(--display);letter-spacing:.02em}
 .devo .meta{margin:4px 0 0;color:var(--muted);font-size:14px}
@@ -356,6 +394,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     <a class="tab" href="#calendar" data-tab="calendar">Calendar</a>
     <a class="tab" href="#training" data-tab="training">Training</a>
     <a class="tab" href="#playbook" data-tab="playbook">Playbook</a>
+    <a class="tab" href="#faq" data-tab="faq">FAQ</a>
     <button class="ebtn" type="button" id="ebtn" aria-haspopup="dialog">Emergency</button>
   </nav>
 
@@ -403,6 +442,7 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   </dialog>
 
   <div data-view="home">
+    <a class="askbar" href="#ask" style="order:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Search or ask a question</a>
     <section class="panel next" id="next-up" aria-label="Next up"></section>
     <!-- DEVO:START -->
     <section class="panel devo" aria-labelledby="devo-h">
@@ -725,6 +765,81 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
     </section>
   </div>
 
+  <div data-view="faq" hidden>
+    <section class="panel ask" aria-labelledby="ask-h">
+      <h2 id="ask-h">Ask or search</h2>
+      <form class="askf" id="askf" role="search">
+        <label for="askq" class="sr-only" style="position:absolute;left:-9999px">Search or ask a question</label>
+        <input id="askq" type="search" placeholder="Try: What time do I arrive?" autocomplete="off" enterkeyhint="search">
+        <button class="btn primary" type="submit" id="ask-ai" hidden>Ask AI</button>
+      </form>
+      <div class="chips" id="ask-chips">
+        <button type="button">What time do I arrive?</button>
+        <button type="button">How do I join SWOT?</button>
+        <button type="button">Missing child steps</button>
+        <button type="button">What training do I need?</button>
+        <button type="button">Radio channel</button>
+      </div>
+      <p class="ainote" id="ask-note">Search works right away. Type a few words.</p>
+      <div class="chat" id="ai-chat" hidden></div>
+      <div id="ai-stop-wrap" hidden><button class="btn" type="button" id="ai-stop">Stop</button></div>
+      <div class="sres" id="sres"></div>
+    </section>
+
+    <div>
+      <h2>FAQ</h2>
+      <p class="intro">Quick answers to what ABs ask most. Tap a question to open it.</p>
+    </div>
+
+    <div class="faqg">
+      <h3>Serving on Sundays</h3>
+      <details class="faq" id="faq-how-often"><summary>How often do I need to serve?</summary><div class="fa"><p>At least 2 of 4 Sundays a month. On your Sundays, serve 2 of the 3 gatherings unless leadership approves otherwise.</p></div></details>
+      <details class="faq" id="faq-arrive"><summary>What time do I need to arrive?</summary><div class="fa"><ul><li><b>Team A (early):</b> arrive 6:00am. Perimeter checks 6:15, pray-in 6:40, briefing 6:45, radio check 7:15.</li><li><b>Team B (mid-morning):</b> arrive 9:15am. Pray-in 9:30, briefing 9:35, radio check 9:40.</li></ul><p><a href="#basics">See Sunday Basics</a></p></div></details>
+      <details class="faq" id="faq-wear"><summary>What do I wear?</summary><div class="fa"><p>All black top with a minimal logo, black or dark gray pants or shorts, and black tactical boots or sneakers.</p></div></details>
+      <details class="faq" id="faq-late"><summary>What if I'm running late?</summary><div class="fa"><p>Arriving after your call time counts as tardy. If you're 15 or more minutes late, check in with a team lead before you take a post. Up to 3 unexcused tardies are allowed in 3 months.</p></div></details>
+      <details class="faq" id="faq-out"><summary>What if I can't make my Sunday?</summary><div class="fa"><p>Tell leadership by Friday at 12pm. Absences you report by then aren't counted against you. Up to 2 unexcused absences are allowed in 3 months.</p></div></details>
+      <details class="faq" id="faq-assign"><summary>Where do I accept my AB assignment?</summary><div class="fa"><p>In Church Center, by end of day Tuesday. Tap your profile picture to see your schedule, then tap Accept.</p><p><a href="https://2819church.churchcenter.com/me" target="_blank" rel="noopener">Open Church Center ↗</a></p></div></details>
+      <details class="faq" id="faq-gatherings"><summary>When are the Sunday gatherings?</summary><div class="fa"><p>8am, 10:30am, and 1pm at 3350 Greenbriar Pkwy SW, Atlanta. They're also live-streamed. Resurrection Sunday has special times: 6am, 8:30am, 11:30am, and 2:30pm.</p></div></details>
+    </div>
+
+    <div class="faqg">
+      <h3>Every week</h3>
+      <details class="faq" id="faq-swot"><summary>When is SWOT and how do I join?</summary><div class="fa"><p>Every Monday at 7pm on Zoom (not on holiday Mondays). Meeting ID 845 7835 6424.</p><p><a href="https://us02web.zoom.us/j/84578356424" target="_blank" rel="noopener">Join on Zoom ↗</a></p></div></details>
+      <details class="faq" id="faq-swot-form"><summary>How do I submit my SWOT analysis?</summary><div class="fa"><p>Fill out the SWOT form every Monday.</p><p><a href="https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform" target="_blank" rel="noopener">Open the SWOT form ↗</a></p></div></details>
+      <details class="faq" id="faq-fk"><summary>How do I register my kids for Formation Kids?</summary><div class="fa"><p>Register in Church Center by end of day Wednesday.</p><p><a href="https://2819church.churchcenter.com/people/forms/982537" target="_blank" rel="noopener">Register in Church Center ↗</a></p></div></details>
+      <details class="faq" id="faq-meetings"><summary>When are team meetings?</summary><div class="fa"><p>The first Saturday of the month, 10am to 2pm. Meetings that land on a holiday weekend are cancelled. <a href="#calendar">See the calendar</a></p></div></details>
+      <details class="faq" id="faq-access"><summary>What is Access?</summary><div class="fa"><p>Access meets the 4th Thursday of the month at 7pm. It's usually virtual. In-person nights are announced ahead of time.</p></div></details>
+    </div>
+
+    <div class="faqg">
+      <h3>Radio and codes</h3>
+      <details class="faq" id="faq-radio"><summary>What radio channel do ABs use?</summary><div class="fa"><p>Channel 9. It's the only long-range channel. <a href="#reference">See all channels</a></p></div></details>
+      <details class="faq" id="faq-codes"><summary>What do the color codes mean?</summary><div class="fa"><p>Red fire, Orange disruptive person, Yellow suspicious person, Green cash escort, Blue medical, Grey severe weather, White lockdown or lockout, Pink missing child, Black 911 and call LEO. <a href="#reference">Open the Reference Guide</a></p></div></details>
+      <details class="faq" id="faq-address"><summary>What address do I give 911?</summary><div class="fa"><p>3350 Greenbriar Pkwy SW, Atlanta, GA 30331. Tap the red Emergency button for numbers and codes in one place.</p></div></details>
+    </div>
+
+    <div class="faqg">
+      <h3>Emergencies</h3>
+      <details class="faq" id="faq-missing"><summary>What do I do if a child goes missing?</summary><div class="fa"><p>Alert the Child Safety Coordinator, lock down the exits, get the child's details, and search by zone. If the child isn't found in 10 minutes, call 911. <a href="#sop-missing-child">Open the Missing Child SOP</a></p></div></details>
+      <details class="faq" id="faq-disruptive"><summary>How do I handle a disruptive guest?</summary><div class="fa"><p>Follow ABC: the Servant Leader alerts ABs, an AB defuses it quietly (two ABs if there's hostility), and law enforcement steps in if it escalates. <a href="#sop-abc">Open the ABC SOP</a></p></div></details>
+      <details class="faq" id="faq-medical"><summary>What do I do in a medical emergency?</summary><div class="fa"><p>Make sure the scene is safe, alert the First Aid Coordinator, call 911 if it's serious, and give first aid or CPR if you're trained. Don't move the person unless they're in danger. <a href="#sop-medical">Open the Medical SOP</a></p></div></details>
+      <details class="faq" id="faq-shooter"><summary>Where are the active shooter steps?</summary><div class="fa"><p>The core rules are in the SOPs. Your post's exact steps are in the AB Playbook. <a href="#sop-active-shooter">Open the Active Shooter SOP</a></p></div></details>
+    </div>
+
+    <div class="faqg">
+      <h3>Training</h3>
+      <details class="faq" id="faq-training"><summary>What training do I need each year?</summary><div class="fa"><ul><li><b>Firearms:</b> a Pistol 2 or Pistol 3 level course. Beginner classes don't count.</li><li><b>First Aid / CPR:</b> a class that includes AED and gives a certificate.</li><li><b>Stop the Bleed:</b> or an approved equivalent.</li></ul><p>Armed ABs also need a valid carry permit and must requalify each year (80%, 240 of 300, drawing from concealment). <a href="#training">Find a class</a></p></div></details>
+      <details class="faq" id="faq-classes"><summary>Where can I find a class?</summary><div class="fa"><p>The Training tab lists classes with cost, address, and which requirement each one covers. Church security courses are at the top. <a href="#training">Open Training</a></p></div></details>
+    </div>
+
+    <div class="faqg">
+      <h3>Using this dashboard</h3>
+      <details class="faq" id="faq-calendar"><summary>How do I add the AB calendar to my phone?</summary><div class="fa"><p>On Home, scroll to “Add to your calendar” and tap Google Calendar, iPhone / Apple, or Outlook. Your calendar updates on its own when dates change.</p></div></details>
+      <details class="faq" id="faq-homescreen"><summary>How do I put this on my home screen?</summary><div class="fa"><p>iPhone: tap Share, then Add to Home Screen. Android: tap the ⋮ menu, then Add to Home screen.</p></div></details>
+      <details class="faq" id="faq-done"><summary>Does checking “Done” tell anyone?</summary><div class="fa"><p>No. Checkmarks are saved only on your phone, just for you, and reset each week.</p></div></details>
+    </div>
+  </div>
+
   <div data-view="due" hidden>
     <div>
       <h2>Due Soon</h2>
@@ -964,8 +1079,64 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   document.querySelectorAll(".filt").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filt").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderT(b.dataset.f);}));
   renderT("all");
 
+  // ---------- Search and Ask AI ----------
+  const SIDX=[];
+  const clean=s=>String(s||"").replace(/\s+/g," ").trim();
+  const addIdx=(kind,title,text,href)=>SIDX.push({kind,title:clean(title),text:clean(text),href});
+  document.querySelectorAll(".faq").forEach(d=>addIdx("FAQ",d.querySelector("summary").textContent,d.querySelector(".fa").textContent,"#"+d.id));
+  document.querySelectorAll(".sop").forEach(d=>addIdx("SOP",d.querySelector("summary b").textContent,d.textContent,"#"+d.id));
+  document.querySelectorAll("#quick-reference .panel").forEach(p=>addIdx("Reference",p.querySelector("h3").textContent,p.textContent,"#reference"));
+  document.querySelectorAll("#sunday-basics .panel").forEach(p=>addIdx("Sunday Basics",p.querySelector("h3").textContent,p.textContent,"#basics"));
+  TRAINING.forEach(t=>addIdx("Training",t.title+" · "+t.provider,[t.desc,t.cost,t.where,t.format,t.how?"house of worship church":"",Object.keys(t.meets).filter(k=>t.meets[k]).join(" ").replace("stb","stop the bleed").replace("firstaid","first aid cpr")].join(" "),"#training"));
+  DUE.forEach(x=>addIdx("Due",x.t,x.when,"#due"));
+  EV.filter(e=>e.e>now).forEach(e=>addIdx("Calendar",e.t+" · "+fmtD(e.s),(e.sub||"")+" "+(e.off||"")+" "+MS[e.s.getMonth()]+" "+M[e.s.getMonth()],"#calendar"));
+  const STOP=new Set("a an the i my me do does how what when where who is are to of for in on at and or it if can be we our you your this that with about".split(" "));
+  const sres=document.getElementById("sres"),askq=document.getElementById("askq");
+  const search=q=>{const toks=q.toLowerCase().split(/[^a-z0-9]+/).filter(t=>t.length>1&&!STOP.has(t));if(!toks.length)return[];
+    return SIDX.map(it=>{const T=it.title.toLowerCase(),X=it.text.toLowerCase();let s=0,hit=0;toks.forEach(t=>{const a=T.includes(t),b=X.includes(t);if(a||b)hit++;s+=(a?3:0)+(b?1:0);});return{it,s:s+(hit===toks.length?4:0)+(it.kind==="Calendar"?-1:0)};})
+      .filter(r=>r.s>0).sort((a,b)=>b.s-a.s).slice(0,8).map(r=>r.it);};
+  const renderS=()=>{const q=askq.value.trim();if(!q){sres.innerHTML="";return;}const r=search(q);
+    sres.innerHTML=r.length?'<h3>Top matches</h3>'+r.map(it=>'<a class="sr" href="'+it.href+'"><small>'+esc(it.kind)+'</small><b>'+esc(it.title)+'</b><span>'+esc(it.text.slice(0,140))+'</span></a>').join(''):'<p class="ainote">No matches yet. Try other words'+(SAMPLE?', or tap Ask AI.':'.')+'</p>';};
+  askq.addEventListener("input",renderS);
+  document.querySelectorAll("#ask-chips button").forEach(b=>b.addEventListener("click",()=>{askq.value=b.textContent;renderS();if(SAMPLE)askAI();}));
+
+  let SAMPLE=null,turns=[],ctl=null;
+  const aiBtn=document.getElementById("ask-ai"),note=document.getElementById("ask-note"),chat=document.getElementById("ai-chat"),stopW=document.getElementById("ai-stop-wrap");
+  const offNote='Search works here. For AI answers, open the dashboard on <a href="https://claude.ai/artifact/T8ZT4mctDcvidb3YQisuAj" target="_blank" rel="noopener" style="color:var(--meet)">claude.ai</a> and sign in.';
+  const fmtA=t=>{let h=esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");const lines=h.split("\n");let out="",inL=false;lines.forEach(l=>{const m=l.match(/^\s*[-*•]\s+(.*)/);if(m){if(!inL){out+="<ul>";inL=true;}out+="<li>"+m[1]+"</li>";}else{if(inL){out+="</ul>";inL=false;}if(l.trim())out+=l+"<br>";}});if(inL)out+="</ul>";return out.replace(/<br>$/,"");};
+  const knowledge=()=>{const ev=EV.filter(e=>e.e>now).map(e=>fmtD(e.s)+", "+e.s.getFullYear()+": "+e.t+(e.sub?" ("+e.sub+")":"")+(e.off?" ["+e.off+"]":"")).join("\n");
+    const pick=sel=>Array.from(document.querySelectorAll(sel)).map(el=>clean(el.textContent)).join("\n\n");
+    return ["CHURCH: 2819 Church, 3350 Greenbriar Pkwy SW, Atlanta, GA 30331. Sunday gatherings 8am, 10:30am, 1pm (also live-streamed). Resurrection Sunday: 6am, 8:30am, 11:30am, 2:30pm. Website: 2819church.org.",
+      "SWOT ZOOM: https://us02web.zoom.us/j/84578356424 (Meeting ID 845 7835 6424). SWOT form: https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform. Church Center (accept assignment): https://2819church.churchcenter.com/me. Formation Kids registration: https://2819church.churchcenter.com/people/forms/982537.",
+      "WEEKLY DUE: "+DUE.map(x=>x.t+" — "+x.when).join("; "),
+      "UPCOMING EVENTS:\n"+ev,
+      "FAQ:\n"+pick(".faq"),"SUNDAY BASICS:\n"+pick("#sunday-basics"),"REFERENCE GUIDE:\n"+pick("#quick-reference .panel"),"SOPS:\n"+pick(".sop"),
+      "TRAINING CLASSES:\n"+TRAINING.map(t=>t.title+" ("+t.provider+"): "+t.desc+" Cost: "+t.cost+". Where: "+t.where+". Counts for: "+(Object.keys(t.meets).filter(k=>t.meets[k]).join(", ")||"none")+". Link: "+t.link).join("\n"),
+      "TRAINING REQUIREMENTS:\n"+pick(".reqs"),"THIS WEEK'S DEVOTIONAL:\n"+pick(".devo"),"LATEST SERMON:\n"+pick(".serm")].join("\n\n");};
+  const rules=()=>"You are the AB Dashboard assistant for the Armor Bearers (ABs), the volunteer safety and security team at 2819 Church in Atlanta. An AB is asking you a question on their phone.\n\nRules:\n- For anything about the team, schedules, procedures, training, links, or the church, use ONLY the DASHBOARD INFO below. If the answer isn't there, say you don't know and suggest asking a team lead. Never make up times, dates, phone numbers, links, or procedures.\n- For Bible questions, you may use your own knowledge. Quote verses from the World English Bible and always give the reference. Be encouraging.\n- If someone describes an emergency happening right now, tell them first to call 911 and tap the red Emergency button.\n- Today is "+fmtD(now)+", "+now.getFullYear()+". Use it for words like next, this week, and tomorrow.\n- Write in plain, simple English: short sentences, no big words. Keep answers short: a few sentences or a short list. When it helps, name the tab to open (Home, Due Soon, Calendar, Training, Playbook, FAQ) and include the exact link from the info.\n- No headings or tables. Bold with **text** is fine. Lists start with - .\n\nDASHBOARD INFO:\n"+knowledge();
+  const addBub=(cls,html)=>{const d=document.createElement("div");d.className="bub "+cls;d.innerHTML=html;chat.appendChild(d);chat.hidden=false;return d;};
+  const askAI=async()=>{const q=askq.value.trim();if(!q||!SAMPLE||ctl)return;
+    addBub("q",esc(q));const a=addBub("a thinking","Thinking…");askq.value="";sres.innerHTML="";
+    turns.push({role:"user",content:q});if(turns.length>12)turns=turns.slice(-12);while(turns.length&&turns[0].role!=="user")turns.shift();
+    ctl=new AbortController();aiBtn.disabled=true;stopW.hidden=false;
+    try{const {text}=await SAMPLE([{role:"user",content:rules()},...turns],{cache:false,signal:ctl.signal,onText:({text})=>{a.classList.remove("thinking");a.innerHTML=fmtA(text);}});
+      a.classList.remove("thinking");a.innerHTML=fmtA(text);turns.push({role:"assistant",content:text});}
+    catch(e){a.classList.remove("thinking");const kept=e&&e.text?fmtA(e.text):"";
+      if(e&&e.code==="cancelled"){a.innerHTML=kept||"Stopped.";}
+      else if(e&&["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e.code)){a.innerHTML="AI answers aren't available for your account here. Search still works.";SAMPLE=null;aiBtn.hidden=true;}
+      else if(e&&e.code==="rate_limited"){a.innerHTML=kept+(kept?"<br>":"")+"Too many questions right now. Try again in a little while.";}
+      else if(e&&e.code==="refused"){a.innerHTML="I can't help with that one. Try asking a different way.";}
+      else{a.innerHTML=kept+(kept?"<br>":"")+"Something went wrong. Try again.";}
+      turns.pop();}
+    finally{ctl=null;aiBtn.disabled=false;stopW.hidden=true;a.scrollIntoView({block:"nearest"});}};
+  document.getElementById("ai-stop").addEventListener("click",()=>{if(ctl)ctl.abort();});
+  document.getElementById("askf").addEventListener("submit",e=>{e.preventDefault();if(SAMPLE)askAI();else renderS();});
+  (async()=>{try{if(window.claude&&typeof window.claude.use==="function")SAMPLE=await window.claude.use("sample");}catch(e){SAMPLE=null;}
+    if(SAMPLE){aiBtn.hidden=false;note.textContent="Type to search. Press Ask AI for an answer written by AI from this dashboard. It uses your own Claude account.";askq.placeholder="Ask anything, like: What time do I arrive?";}
+    else note.innerHTML=offNote;})();
+
   // ---------- Tabs ----------
-  const VIEWS=["home","due","calendar","training","playbook"];
+  const VIEWS=["home","due","calendar","training","playbook","faq"];
   const ALIAS={reference:"quick-reference",sops:"sop-h",basics:"sunday-basics"};
   const dlg=document.getElementById("emerg");
   const closeE=()=>{try{if(dlg.open)dlg.close();}catch(e){dlg.removeAttribute("open");}};
@@ -975,12 +1146,14 @@ dialog#emerg::backdrop{background:rgba(10,14,20,.6)}
   const route=(scroll)=>{let v=location.hash.slice(1);let sop=null,target=null;
     if(/^sop-/.test(v)){sop=document.getElementById(v);target=sop;v="playbook";}
     else if(ALIAS[v]){target=document.getElementById(ALIAS[v]);v="playbook";}
+    else if(/^faq-/.test(v)){sop=document.getElementById(v);target=sop;v="faq";}
+    else if(v==="ask"){v="faq";setTimeout(()=>{const i=document.getElementById("askq");i.focus();},60);}
     if(!VIEWS.includes(v))v="home";
     closeE();
     document.querySelectorAll("[data-view]").forEach(el=>el.hidden=el.dataset.view!==v);
     document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
     if(sop)sop.open=true;
-    if(target){target.scrollIntoView({block:"start"});window.scrollBy(0,innerWidth>640?-70:-16);}
+    if(target){target.scrollIntoView({block:"start"});window.scrollBy(0,-76);}
     else if(scroll)window.scrollTo(0,0);};
   window.addEventListener("hashchange",()=>route(true));
   route(false);
