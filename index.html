@@ -151,6 +151,27 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tbdl b{font-weight:700}
 .tbdl span{color:var(--muted);font-size:14px}
 .up li.wk{display:block}
+.reqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.req{display:grid;gap:4px;align-content:start;padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.req b{display:flex;align-items:center;gap:8px}
+.req span{color:var(--muted);font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filt{padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px var(--body);cursor:pointer}
+.filt[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filt:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:12px;align-content:start;min-width:0}
+.tcard h3{margin:0;font:700 22px/1.15 var(--display);letter-spacing:.02em}
+.tcard .prov{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tcard p{margin:0}
+.tmeta{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;margin:0;font-size:14px}
+.tmeta dt{color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding-top:2px}
+.tmeta dd{margin:0;overflow-wrap:anywhere}
+.meets{display:flex;flex-wrap:wrap;gap:6px}
+.mb{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:13px;font-weight:700}
+.mb.yes{background:var(--outing-soft);color:var(--outing)}
+.mb.no{border:1.5px dashed var(--line);color:var(--muted);font-weight:600}
+.tcard .btn{justify-self:start}
 .side{display:grid;gap:16px;min-width:0}
 .res{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .res a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:600;background:var(--bg)}
@@ -186,12 +207,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <header>
     <div class="eyebrow">Armor Bearers · 2027</div>
     <h1>AB Dashboard</h1>
-    <p class="sub">What's coming up, every event for the year, the reference guide, and our SOPs, all in one place.</p>
+    <p class="sub">What's coming up, every event for the year, training, the reference guide, and our SOPs, all in one place.</p>
   </header>
 
   <nav class="tabs" aria-label="Dashboard sections">
     <a class="tab" href="#home" data-tab="home">Home</a>
     <a class="tab" href="#calendar" data-tab="calendar">Upcoming Events</a>
+    <a class="tab" href="#training" data-tab="training">Training</a>
     <a class="tab" href="#reference" data-tab="reference">Reference Guide</a>
     <a class="tab" href="#sops" data-tab="sops">SOPs</a>
   </nav>
@@ -209,6 +231,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <section class="panel" aria-labelledby="res-h">
           <h2 id="res-h">Resources</h2>
           <ul class="res">
+            <li><a href="#training">Training Opportunities <span>Classes that count</span></a></li>
             <li><a href="#reference">Reference Guide <span>Codes, channels, phones</span></a></li>
             <li><a href="#sop-active-shooter">Active Shooter <span>SOP</span></a></li>
             <li><a href="#sop-medical">Medical Emergency <span>SOP</span></a></li>
@@ -470,6 +493,29 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       </div>
     </section>
   </div>
+
+  <div data-view="training" hidden>
+    <div>
+      <h2>Training Opportunities</h2>
+      <p class="intro">Outside classes you can sign up for. Each one shows which yearly AB requirements it covers.</p>
+    </div>
+    <section class="panel" aria-labelledby="req-h" style="display:grid;gap:12px">
+      <h2 id="req-h" style="margin:0;font-size:20px">Yearly AB requirements</h2>
+      <div class="reqs">
+        <div class="req"><b><span class="dot" style="--c:var(--summit)"></span>Firearms</b><span>A Pistol 2 or Pistol 3 level course (intermediate or advanced defensive shooting). Pistol 1 / beginner classes don't count.</span></div>
+        <div class="req"><b><span class="dot" style="--c:var(--meet)"></span>First Aid / CPR</b><span>A First Aid, CPR, and AED class with a certificate, such as American Heart Association Heartsaver or American Red Cross.</span></div>
+        <div class="req"><b><span class="dot" style="--c:var(--outing)"></span>Stop the Bleed</b><span>Stop the Bleed or an equivalent bleeding-control course approved by the Security Director.</span></div>
+      </div>
+    </section>
+    <div class="filters" role="group" aria-label="Show classes that meet">
+      <button class="filt" type="button" data-f="all" aria-pressed="true">All</button>
+      <button class="filt" type="button" data-f="firearms" aria-pressed="false">Firearms</button>
+      <button class="filt" type="button" data-f="firstaid" aria-pressed="false">First Aid / CPR</button>
+      <button class="filt" type="button" data-f="stb" aria-pressed="false">Stop the Bleed</button>
+    </div>
+    <div class="tgrid" id="tgrid"></div>
+    <p class="foot">Have a class to add? Send it to the AB training lead.</p>
+  </div>
 </div>
 
 <script>
@@ -556,8 +602,33 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     html+='<li'+(e.off?' class="off"':'')+'><div class="ud"><span>'+DW[e.s.getDay()]+'</span><b>'+e.d+'</b><span>'+MS[e.m]+'</span></div><div style="min-width:0"><div class="ut"><span class="dot" style="--c:'+e.c+'"></span><span>'+esc(e.t)+'</span></div><div class="us">'+(e.off?'<span class="cx">'+esc(e.off)+'</span>':esc(e.sub||"All day"))+'</div></div></li>';});
   ul.innerHTML=html||'<li><div></div><div class="us">Nothing else on the calendar for 2027.</div></li>';
 
+  // ---------- Training ----------
+  // To add a class: copy one block below and fill it in. meets: true = counts toward that yearly requirement.
+  const TRAINING=[
+    {title:"Pistol 103: Conceal Carry",provider:"Georgia Firing Line",
+     desc:"Two-hour intermediate class on carrying for protection: carry mindset, a legal overview, holster choice, the draw, defensive shooting, and what happens after a defensive encounter. You need Pistol 101 or the same skills. Bring a strong-side holster, belt, spare magazine, and 250 rounds.",
+     cost:"$175",where:"2727 Canton Rd, Marietta, GA 30066",link:"https://www.gafiringline.com/service-page/pistol-103-conceal-carry-weapons",
+     meets:{firearms:true,firstaid:false,stb:false}},
+    {title:"First Aid / CPR / AED",provider:"American Red Cross",
+     desc:"Red Cross classes run all over metro Atlanta. Pick one that covers First Aid, CPR, and AED and gives you a certificate.",
+     cost:"Varies by class",where:"Locations across metro Atlanta. Search near ZIP 30331.",link:"https://www.redcross.org/take-a-class",
+     meets:{firearms:false,firstaid:true,stb:false}},
+    {title:"Stop the Bleed",provider:"American College of Surgeons",
+     desc:"Hands-on bleeding control: direct pressure, wound packing, and tourniquets. Public classes are run by hospitals and fire departments and are often free.",
+     cost:"Often free",where:"Hospitals and fire stations across metro Atlanta",link:"https://www.stopthebleed.org",
+     meets:{firearms:false,firstaid:false,stb:true}}
+  ];
+  const REQ=[["firearms","Firearms"],["firstaid","First Aid / CPR"],["stb","Stop the Bleed"]];
+  const tg=document.getElementById("tgrid");
+  const renderT=f=>{const list=TRAINING.filter(t=>f==="all"||t.meets[f]);
+    tg.innerHTML=list.length?list.map(t=>'<article class="tcard"><div><div class="prov">'+esc(t.provider)+'</div><h3>'+esc(t.title)+'</h3></div><div class="meets">'+
+      REQ.map(([k,l])=>t.meets[k]?'<span class="mb yes">✓ '+l+'</span>':'<span class="mb no" aria-label="Does not count for '+l+'">'+l+'</span>').join('')+
+      '</div><p>'+esc(t.desc)+'</p><dl class="tmeta"><dt>Cost</dt><dd>'+esc(t.cost)+'</dd><dt>Where</dt><dd>'+esc(t.where)+'</dd></dl><a class="btn primary" href="'+esc(t.link)+'" target="_blank" rel="noopener">Register ↗</a></article>').join(''):'<p class="intro">No classes listed for this requirement yet.</p>';};
+  document.querySelectorAll(".filt").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filt").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderT(b.dataset.f);}));
+  renderT("all");
+
   // ---------- Tabs ----------
-  const VIEWS=["home","calendar","reference","sops"];
+  const VIEWS=["home","calendar","training","reference","sops"];
   const route=(scroll)=>{let v=location.hash.slice(1);let sop=null;
     if(/^sop-/.test(v)){sop=document.getElementById(v);v="sops";}
     if(!VIEWS.includes(v))v="home";
