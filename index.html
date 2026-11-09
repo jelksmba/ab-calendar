@@ -172,6 +172,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mb.yes{background:var(--outing-soft);color:var(--outing)}
 .mb.no{border:1.5px dashed var(--line);color:var(--muted);font-weight:600}
 .tcard .btn{justify-self:start}
+.tcard.how{border:2px solid var(--brass)}
+.howtag{justify-self:start;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:var(--brass-soft);color:var(--brass);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tnote{font-size:13px;color:var(--muted);font-style:italic}
+.tgroup{display:grid;gap:12px}
+.tgroup>h3{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);font-weight:700}
+.tgroup>p{margin:-6px 0 0;color:var(--muted);font-size:14px}
+.tlist{display:grid;gap:28px}
+.tgroup.hw .tgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
 .side{display:grid;gap:16px;min-width:0}
 .res{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .res a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:600;background:var(--bg)}
@@ -509,11 +517,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     </section>
     <div class="filters" role="group" aria-label="Show classes that meet">
       <button class="filt" type="button" data-f="all" aria-pressed="true">All</button>
+      <button class="filt" type="button" data-f="how" aria-pressed="false">House of Worship</button>
       <button class="filt" type="button" data-f="firearms" aria-pressed="false">Firearms</button>
       <button class="filt" type="button" data-f="firstaid" aria-pressed="false">First Aid / CPR</button>
       <button class="filt" type="button" data-f="stb" aria-pressed="false">Stop the Bleed</button>
     </div>
-    <div class="tgrid" id="tgrid"></div>
+    <div class="tlist" id="tgrid"></div>
     <p class="foot">Have a class to add? Send it to the AB training lead.</p>
   </div>
 </div>
@@ -604,26 +613,68 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   // ---------- Training ----------
   // To add a class: copy one block below and fill it in. meets: true = counts toward that yearly requirement.
+  const SRGC="South River Gun Club, 5205 GA Hwy 212, Covington, GA 30016";
   const TRAINING=[
-    {title:"Pistol 103: Conceal Carry",provider:"Georgia Firing Line",
-     desc:"Two-hour intermediate class on carrying for protection: carry mindset, a legal overview, holster choice, the draw, defensive shooting, and what happens after a defensive encounter. You need Pistol 101 or the same skills. Bring a strong-side holster, belt, spare magazine, and 250 rounds.",
+    // ---- House of Worship ----
+    {how:true,title:"Protecting Houses of Worship",provider:"USCCA",format:"In person · online video series too",
+     desc:"Built for church safety teams: spotting threats, emergency planning, responding decisively to an attack, Run-Hide-Fight adapted for a house of worship, open-door and volunteer-team challenges, and the legal line for deadly force.",
+     cost:"Free (in-person class)",where:"Taught by USCCA instructors around Georgia. Use “Find an Event Near You.”",link:"https://www.usconcealedcarry.com/firearms-training/classes/protecting-houses-of-worship/",
+     note:"Teams of 5+ can get USCCA group membership pricing.",meets:{}},
+    {how:true,title:"Safety Member Certification",provider:"Sheepdog Church Security",format:"Online · self-paced",
+     desc:"Self-paced video modules on active shooter response, de-escalating disruptive persons, and medical emergency preparedness. This is the certification in our AB training assignments.",
+     cost:"See site",where:"Online",link:"https://sheepdog-church-security.thinkific.com/bundles/safety-member-certification",meets:{}},
+    {how:true,title:"Sunday Safety Talks",provider:"Sheepdog Church Security",format:"Online · live",
+     desc:"Live online church safety talks with Kris Moloney. Free for Atlanta churches. Register once for the whole schedule.",
+     cost:"Free",where:"Online · Sundays at 3pm Eastern (2pm Central)",link:"https://sheepdog-church-security.thinkific.com/pages/church-security-training-in-atlanta-georgia-sheepdog-church-security-academy",meets:{}},
+    {how:true,title:"Foundations of Church Security",provider:"Christian Warrior Training",format:"Online · self-paced",
+     desc:"Free online courses for church security ministries, starting with Foundations of Church Security and De-escalation Tactics. Covers risk assessment, emergency response, and conflict resolution. Certificate when you finish.",
+     cost:"Free",where:"Online",link:"https://christianwarriortraining.ezycourse.com/",meets:{}},
+    // ---- Firearms ----
+    {title:"Pistol 2: Ready to Carry",provider:"Lion's Den Tactical",format:"In person · day 1 virtual",
+     desc:"Drawing from the holster and getting on target, with drills that build speed and accuracy. 4 hours of class plus 4 hours on the range. Holster must be Kydex or leather and fully cover the trigger.",
+     cost:"$250",where:SRGC,link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-2387171/class-covington-ga-pistol-2-ready-to-carry-6f621/",
+     meets:{firearms:true}},
+    {title:"Handgun Fundamentals 2 (Intermediate)",provider:"SoloTactix Firearms Training",format:"In person",
+     desc:"Intermediate handgun class taught by USCCA-certified instructor Solomon Murray. Handgun Fundamentals 3 ($200) is the next step up.",
+     cost:"$175",where:"Covington, GA (confirm the range when you register)",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/solotactix-firearms-training-llc-2100142/",
+     meets:{firearms:true}},
+    {title:"Pistol 103: Conceal Carry",provider:"Georgia Firing Line",format:"In person · 2 hours",
+     desc:"Intermediate class on carrying for protection: carry mindset, a legal overview, holster choice, the draw, defensive shooting, and what happens after a defensive encounter. You need Pistol 101 or the same skills. Bring a strong-side holster, belt, spare magazine, and 250 rounds.",
      cost:"$175",where:"2727 Canton Rd, Marietta, GA 30066",link:"https://www.gafiringline.com/service-page/pistol-103-conceal-carry-weapons",
-     meets:{firearms:true,firstaid:false,stb:false}},
-    {title:"First Aid / CPR / AED",provider:"American Red Cross",
+     meets:{firearms:true}},
+    {title:"Foundations Handgun Basics",provider:"Bass Reeves Gun Club",format:"Online, then in person",
+     desc:"Intro handgun class led by certified instructors, held every other month. Part online, then live fire on the range. Limited to 12 seats.",
+     cost:"$100",where:SRGC,link:"https://www.bassreevesgc.com/",
+     note:"Beginner level. Great for new ABs, but it doesn't count toward the yearly firearms requirement.",meets:{}},
+    {title:"Legal Use of Force",provider:"Lion's Den Tactical",format:"In person · monthly, 7pm",
+     desc:"The legal side of using force. Held about once a month.",
+     cost:"Free",where:"Ellenwood, GA 30294",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-2387171/",meets:{}},
+    // ---- Medical ----
+    {title:"Stop the Bleed",provider:"Lion's Den Tactical",format:"In person",
+     desc:"Bleeding control class: direct pressure, wound packing, and tourniquets.",
+     cost:"$75",where:"Newnan, GA",link:"https://www.usconcealedcarry.com/firearms-training/instructors/georgia-instructors/lions-den-tactical-llc-1488902/",
+     meets:{stb:true}},
+    {title:"Stop the Bleed",provider:"American College of Surgeons",format:"In person",
+     desc:"The national Stop the Bleed program. Public classes are run by hospitals and fire departments and are often free.",
+     cost:"Often free",where:"Hospitals and fire stations across metro Atlanta",link:"https://www.stopthebleed.org",
+     meets:{stb:true}},
+    {title:"First Aid / CPR / AED",provider:"American Red Cross",format:"In person or blended",
      desc:"Red Cross classes run all over metro Atlanta. Pick one that covers First Aid, CPR, and AED and gives you a certificate.",
      cost:"Varies by class",where:"Locations across metro Atlanta. Search near ZIP 30331.",link:"https://www.redcross.org/take-a-class",
-     meets:{firearms:false,firstaid:true,stb:false}},
-    {title:"Stop the Bleed",provider:"American College of Surgeons",
-     desc:"Hands-on bleeding control: direct pressure, wound packing, and tourniquets. Public classes are run by hospitals and fire departments and are often free.",
-     cost:"Often free",where:"Hospitals and fire stations across metro Atlanta",link:"https://www.stopthebleed.org",
-     meets:{firearms:false,firstaid:false,stb:true}}
+     meets:{firstaid:true}}
   ];
   const REQ=[["firearms","Firearms"],["firstaid","First Aid / CPR"],["stb","Stop the Bleed"]];
   const tg=document.getElementById("tgrid");
-  const renderT=f=>{const list=TRAINING.filter(t=>f==="all"||t.meets[f]);
-    tg.innerHTML=list.length?list.map(t=>'<article class="tcard"><div><div class="prov">'+esc(t.provider)+'</div><h3>'+esc(t.title)+'</h3></div><div class="meets">'+
+  const card=t=>'<article class="tcard'+(t.how?' how':'')+'">'+(t.how?'<span class="howtag">House of Worship</span>':'')+'<div><div class="prov">'+esc(t.provider)+'</div><h3>'+esc(t.title)+'</h3></div><div class="meets">'+
       REQ.map(([k,l])=>t.meets[k]?'<span class="mb yes">✓ '+l+'</span>':'<span class="mb no" aria-label="Does not count for '+l+'">'+l+'</span>').join('')+
-      '</div><p>'+esc(t.desc)+'</p><dl class="tmeta"><dt>Cost</dt><dd>'+esc(t.cost)+'</dd><dt>Where</dt><dd>'+esc(t.where)+'</dd></dl><a class="btn primary" href="'+esc(t.link)+'" target="_blank" rel="noopener">Register ↗</a></article>').join(''):'<p class="intro">No classes listed for this requirement yet.</p>';};
+      '</div><p>'+esc(t.desc)+'</p>'+(t.note?'<p class="tnote">'+esc(t.note)+'</p>':'')+'<dl class="tmeta"><dt>Cost</dt><dd>'+esc(t.cost)+'</dd><dt>Format</dt><dd>'+esc(t.format||"In person")+'</dd><dt>Where</dt><dd>'+esc(t.where)+'</dd></dl><a class="btn primary" href="'+esc(t.link)+'" target="_blank" rel="noopener">Register ↗</a></article>';
+  const group=(h,p,list,cls)=>list.length?'<section class="tgroup'+(cls?' '+cls:'')+'"><h3>'+h+'</h3>'+(p?'<p>'+p+'</p>':'')+'<div class="tgrid">'+list.map(card).join('')+'</div></section>':'';
+  const renderT=f=>{
+    if(f==="all"){tg.innerHTML=group("Built for church security teams","Start here. These are made for teams like ours.",TRAINING.filter(t=>t.how),"hw")+
+      group("Firearms","",TRAINING.filter(t=>!t.how&&(t.meets.firearms||/handgun|pistol|force/i.test(t.title))))+
+      group("Medical","",TRAINING.filter(t=>!t.how&&(t.meets.stb||t.meets.firstaid)));return;}
+    const list=TRAINING.filter(t=>f==="how"?t.how:t.meets[f]);
+    tg.innerHTML=list.length?'<div class="tgrid">'+list.map(card).join('')+'</div>':'<p class="intro">No classes listed for this one yet.</p>';};
   document.querySelectorAll(".filt").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filt").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderT(b.dataset.f);}));
   renderT("all");
 
