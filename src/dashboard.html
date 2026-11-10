@@ -886,7 +886,7 @@ html,body{max-width:100%;overflow-x:clip}
       <details class="faq" id="faq-swot-form"><summary>How do I submit my SWOT analysis?</summary><div class="fa"><p>Fill out the SWOT form every Monday.</p><p><a href="https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform" target="_blank" rel="noopener">Open the SWOT form ↗</a></p></div></details>
       <details class="faq" id="faq-fk"><summary>How do I register my kids for Formation Kids?</summary><div class="fa"><p>Register in Church Center by end of day Wednesday.</p><p><a href="https://2819church.churchcenter.com/people/forms/982537" target="_blank" rel="noopener">Register in Church Center ↗</a></p></div></details>
       <details class="faq" id="faq-meetings"><summary>When are team meetings?</summary><div class="fa"><p>The first Saturday of the month, 10am to 2pm. Meetings that land on a holiday weekend are cancelled. <a href="#calendar">See the calendar</a></p></div></details>
-      <details class="faq" id="faq-access"><summary>What is Access?</summary><div class="fa"><p>Access meets the 4th Thursday of the month at 7pm. It's usually virtual. In-person nights are announced ahead of time.</p></div></details>
+      <details class="faq" id="faq-access"><summary>What is Access?</summary><div class="fa"><p>Access meets the 4th Thursday of the month at 7pm. In November and December 2027 it moves to Wednesday (Nov 24 and Dec 22). It's usually virtual. In-person nights are announced ahead of time.</p></div></details>
     </div>
 
     <div class="faqg">
@@ -996,8 +996,8 @@ html,body{max-width:100%;overflow-x:clip}
   const summit=key(0,30);
   const allHands={[key(2,28)]:"Easter Sunday",[key(11,26)]:"Christmas Sunday"};
   const keyDays={[key(2,26)]:"Good Friday",[key(2,28)]:"Easter Sunday (All Hands)",[key(4,9)]:"Mother's Day",[key(5,20)]:"Father's Day",[key(11,26)]:"Christmas Sunday (All Hands)"};
-  const access={}, accessCancel={10:"Thanksgiving"};
-  for(let m=0;m<12;m++){let c=0;for(let d=1;d<=31;d++){if(new Date(Y,m,d).getDay()===4&&++c===4){access[m]=d;break;}}}
+  const access={}, accessCancel={}, accessWed={10:1,11:1};
+  for(let m=0;m<12;m++){let c=0;for(let d=1;d<=31;d++){if(new Date(Y,m,d).getDay()===4&&++c===4){access[m]=accessWed[m]?d-1:d;break;}}}
   const outingMonths={2:"Q1",5:"Q2",8:"Q3",11:"Q4"};
   const outingDay={2:20,5:12,8:18,11:11};
   const tbd={7:["Baptism · Date TBD"],9:["National Access · Sat TBD"]};
@@ -1016,7 +1016,7 @@ html,body{max-width:100%;overflow-x:clip}
   col("Key Dates",Object.keys(keyDays).map(k=>k.split("-").map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(([m,d])=>'<li><span class="d">'+fmt(m,d)+'</span><span>'+keyDays[key(m,d)]+'</span></li>'));
   col("Team Meetings · 10am–2pm",Object.keys(meets).filter(m=>!meetFlags[m]).map(m=>'<li><span class="d">'+fmt(+m,meets[m])+'</span></li>'));
   col("Quarterly Outings",Object.keys(outingMonths).map(m=>{m=+m;return '<li><span class="d">'+fmt(m,outingDay[m])+'</span><span>'+outingMonths[m]+' · <span class="tent">Tentative</span></span></li>';}));
-  col("Access · 4th Thursday · 7pm",[].concat(Object.keys(access).map(m=>{m=+m;return accessCancel[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,access[m])+'</span><span><span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></li>':'<li><span class="d">'+fmt(m,access[m])+'</span></li>';})));
+  col("Access · 4th Thursday · 7pm (Wed in Nov & Dec)",[].concat(Object.keys(access).map(m=>{m=+m;return accessCancel[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,access[m])+'</span><span><span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></li>':'<li><span class="d">'+fmt(m,access[m])+'</span></li>';})));
   col("Dates Not Confirmed",['<li><span class="d">Jan 11–16</span><span>Consecration Week · church-wide fast</span></li>','<li><span class="d">August</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
   let swotCount=0; const holList=[];
   for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){swotCount++; if(holidayMon[key(m,d)]) holList.push('<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,d)+'</span><span><span class="cx">Cancelled · Holiday</span> ('+holidayMon[key(m,d)]+')</span></li>');}}}
@@ -1030,7 +1030,7 @@ html,body{max-width:100%;overflow-x:clip}
   Object.keys(keyDays).forEach(k=>{const [m,d]=k.split("-").map(Number);add(m,d,{t:keyDays[k],type:"key",c:"var(--brass)",ah:/All Hands/.test(keyDays[k])});});
   Object.keys(meets).forEach(m=>{m=+m;add(m,meets[m],{t:"Team Meeting",sub:"10am–2pm",h:10,eh:14,type:"meet",c:"var(--meet)",off:meetFlags[m]?"Cancelled · "+meetFlags[m]:null});});
   for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm · Zoom",zoom:true,h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
-  Object.keys(access).forEach(m=>{m=+m;add(m,access[m],{t:"Access",sub:"7pm · virtual unless announced",h:19,eh:20,type:"access",c:"var(--access)",off:accessCancel[m]?"Cancelled · Holiday ("+accessCancel[m]+")":null});});
+  Object.keys(access).forEach(m=>{m=+m;add(m,access[m],{t:"Access",sub:"7pm · "+(accessWed[m]?"Wednesday this month · ":"")+"virtual unless announced",h:19,eh:20,type:"access",c:"var(--access)",off:accessCancel[m]?"Cancelled · Holiday ("+accessCancel[m]+")":null});});
   Object.keys(outingDay).forEach(m=>{m=+m;add(m,outingDay[m],{t:outingMonths[m]+" Team Outing",sub:"Tentative",type:"outing",c:"var(--outing)"});});
   // November & December 2026: SWOTs only (no team meeting, no outing)
   [[10,2],[10,9],[10,16],[10,23],[10,30],[11,7],[11,14],[11,21],[11,28]].forEach(([m,d])=>EV.push({y:2026,m,d,s:new Date(2026,m,d,19),e:new Date(2026,m,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));

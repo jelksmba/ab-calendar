@@ -17,7 +17,8 @@ HOLIDAY_MONDAYS = {
     date(Y, 9, 6): "Labor Day",
 }
 CANCELLED_MEETINGS = {1: "New Year's weekend", 7: "July 4th weekend", 9: "Labor Day weekend"}
-CANCELLED_ACCESS = {11: "Thanksgiving"}
+CANCELLED_ACCESS = {}
+ACCESS_WEDNESDAY = {11, 12}  # Nov & Dec 2027: Wednesday before the 4th Thursday
 KEY_DATES = [
     (date(Y, 3, 26), "Good Friday"),
     (date(Y, 3, 28), "Easter Sunday (All Hands)"),
@@ -145,6 +146,8 @@ for uid, title, first, day, link in DUE:
 # Access: fourth Thursday, 7pm
 for m in range(1, 13):
     d = nth_weekday(m, 3, 4)
+    if m in ACCESS_WEDNESDAY:
+        d -= timedelta(days=1)
     if m in CANCELLED_ACCESS:
         add(f"access-{d:%Y%m%d}", f"CANCELLED - Access (Holiday: {CANCELLED_ACCESS[m]})", d,
             hours=((19, 0), (20, 0)), free=True, desc="Cancelled because it falls on a holiday.")
