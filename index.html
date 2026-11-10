@@ -1103,10 +1103,10 @@ html,body{max-width:100%;overflow-x:clip}
     {id:"swot",t:"Submit your SWOT analysis",when:"Every Monday",short:"SWOT analysis",wd:1,c:"var(--swot)",link:"https://docs.google.com/forms/d/e/1FAIpQLSdJ9eZHkPlYYCrwxbDneoTRFnQQ-d3QDFd_PDVpZPSga5W6PQ/viewform",cta:"Submit SWOT analysis"},
     {id:"assign",t:"Accept your weekly AB assignment",when:"Every Tuesday by end of day",short:"Accept AB assignment",wd:2,c:"var(--meet)",link:"https://2819church.churchcenter.com/me",cta:"Open Church Center"},
     {id:"fk",t:"Register your kids for Formation Kids",when:"Every Wednesday by end of day",short:"Formation Kids",wd:3,c:"var(--outing)",link:"https://2819church.churchcenter.com/people/forms/982537",cta:"Register in Church Center"},
-    {id:"blackout",t:"Update your blackout dates for next month",when:"Every month by the 20th · in Church Center, tap your profile, then Blockout dates",short:"Blackout dates",md:20,c:"var(--brass)",link:"https://2819church.churchcenter.com/me",cta:"Update in Church Center"}
+    {id:"blackout",t:"Update your blackout dates for next month",when:"Every month by the 2nd Friday · in Church Center, tap your profile, then Blockout dates",short:"Blackout dates",md:true,nth:2,wd:5,c:"var(--brass)",link:"https://2819church.churchcenter.com/me",cta:"Update in Church Center"}
   ];
   const ymd=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
-  const nextDue=x=>{const d=day0(now);if(x.md){let t=new Date(d.getFullYear(),d.getMonth(),x.md);if(t<d)t=new Date(d.getFullYear(),d.getMonth()+1,x.md);return t;}d.setDate(d.getDate()+((x.wd-d.getDay()+7)%7));return d;};
+  const nextDue=x=>{const d=day0(now);if(x.md){const nf=(y,m)=>{const f=new Date(y,m,1);return new Date(y,m,1+((x.wd-f.getDay()+7)%7)+7*(x.nth-1));};let t=nf(d.getFullYear(),d.getMonth());if(t<d)t=nf(d.getFullYear(),d.getMonth()+1);return t;}d.setDate(d.getDate()+((x.wd-d.getDay()+7)%7));return d;};
   const isDone=(id,d)=>{try{return localStorage.getItem("ab-due-"+id+"-"+ymd(d))==="1";}catch(e){return false;}};
   const setDone=(id,d,v)=>{try{v?localStorage.setItem("ab-due-"+id+"-"+ymd(d),"1"):localStorage.removeItem("ab-due-"+id+"-"+ymd(d));}catch(e){}};
   const pill=(d,done)=>{if(done)return '<span class="pill ok">✓ Done</span>';const n=daysTo(d);return n===0?'<span class="pill today">Due today</span>':n===1?'<span class="pill tom">Due tomorrow</span>':'<span class="pill">Due '+DW[d.getDay()]+(n>6?', '+MS[d.getMonth()]+' '+d.getDate():'')+' · in '+n+' days</span>';};
@@ -1117,7 +1117,7 @@ html,body{max-width:100%;overflow-x:clip}
     document.getElementById("due-home").innerHTML=items.filter(x=>!x.md||daysTo(x.due)<=7).map(x=>'<li'+(x.done?' class="isdone"':'')+'><span class="dot" style="--c:'+x.c+'"></span><span>'+(x.link?'<a href="'+x.link+'" target="_blank" rel="noopener">'+x.short+'</a>':x.short)+'</span>'+pill(x.due,x.done)+'</li>').join('');
     const ws=wkStart(now);let wk="";
     for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const today=+d===+day0(now);
-      wk+='<div class="wd'+(today?' now':'')+'"><b>'+DW[d.getDay()]+'</b><span class="n">'+d.getDate()+'</span>'+DUE.filter(x=>x.md?x.md===d.getDate():x.wd===d.getDay()).map(x=>'<span class="wchip'+(isDone(x.id,d)?' done':'')+'" style="--c:'+x.c+'">'+x.short+'</span>').join('')+'</div>';}
+      wk+='<div class="wd'+(today?' now':'')+'"><b>'+DW[d.getDay()]+'</b><span class="n">'+d.getDate()+'</span>'+DUE.filter(x=>x.md?(d.getDay()===x.wd&&Math.ceil(d.getDate()/7)===x.nth):x.wd===d.getDay()).map(x=>'<span class="wchip'+(isDone(x.id,d)?' done':'')+'" style="--c:'+x.c+'">'+x.short+'</span>').join('')+'</div>';}
     document.getElementById("due-week").innerHTML=wk;
     document.querySelectorAll("#due-list input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{const it=items.find(x=>x.id===cb.dataset.id);setDone(it.id,it.due,cb.checked);renderDue();const n=document.getElementById("due-"+it.id);if(n)n.focus();}));
   };
