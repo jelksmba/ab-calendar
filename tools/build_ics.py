@@ -140,6 +140,9 @@ DUE = [
     ("due-fk", "Due: Register kids for Formation Kids (by end of day)", date(2026, 11, 11), "WE",
      "https://2819church.churchcenter.com/people/forms/982537"),
 ]
+add("due-blackout", "Due: Update your blackout dates for next month (Church Center)", date(2026, 11, 20),
+    rrule="FREQ=MONTHLY;BYMONTHDAY=20;UNTIL=20271231", url="https://2819church.churchcenter.com/me",
+    desc="In Church Center, tap your profile, then Blockout dates: https://2819church.churchcenter.com/me")
 for uid, title, first, day, link in DUE:
     add(uid, title, first, rrule=f"FREQ=WEEKLY;BYDAY={day};UNTIL=20271231", url=link, desc=f"Do it here: {link}")
 
