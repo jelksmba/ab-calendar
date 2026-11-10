@@ -1017,7 +1017,7 @@ html,body{max-width:100%;overflow-x:clip}
   col("Team Meetings · 10am–2pm",Object.keys(meets).filter(m=>!meetFlags[m]).map(m=>'<li><span class="d">'+fmt(+m,meets[m])+'</span></li>'));
   col("Quarterly Outings",Object.keys(outingMonths).map(m=>{m=+m;return '<li><span class="d">'+fmt(m,outingDay[m])+'</span><span>'+outingMonths[m]+' · <span class="tent">Tentative</span></span></li>';}));
   col("Access · 4th Thursday · 7pm (Wed in Nov & Dec)",[].concat(Object.keys(access).map(m=>{m=+m;return accessCancel[m]?'<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,access[m])+'</span><span><span class="cx">Cancelled</span> · '+accessCancel[m]+'</span></li>':'<li><span class="d">'+fmt(m,access[m])+'</span></li>';})));
-  col("Dates Not Confirmed",['<li><span class="d">Jan 11–16</span><span>Consecration Week · church-wide fast</span></li>','<li><span class="d">August</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
+  col("Dates Not Confirmed",['<li><span class="d">Jan 4–9</span><span>Consecration Week · church-wide fast (first full week of January)</span></li>','<li><span class="d">August</span><span>Baptism</span></li>','<li><span class="d">A Sat in Oct</span><span>Annual National Access</span></li>']);
   let swotCount=0; const holList=[];
   for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){swotCount++; if(holidayMon[key(m,d)]) holList.push('<li><span class="d" style="text-decoration:line-through;color:var(--muted)">'+fmt(m,d)+'</span><span><span class="cx">Cancelled · Holiday</span> ('+holidayMon[key(m,d)]+')</span></li>');}}}
   col("Monday SWOTs · 7pm",['<li><span class="d">'+(swotCount-holList.length)+' SWOTs</span><span>Jan 4 – Dec 27</span></li>','<li style="color:var(--muted);font-size:13px;margin-top:4px">No SWOT on these holiday Mondays:</li>'].concat(holList));
@@ -1026,7 +1026,7 @@ html,body{max-width:100%;overflow-x:clip}
   const EV=[];
   const add=(m,d,o)=>{const allDay=o.h==null;const s=new Date(Y,m,d,allDay?0:o.h,0);const e=allDay?new Date(Y,m,(o.endD||d)+1):new Date(Y,m,d,o.eh,0);EV.push(Object.assign({m,d,s,e},o));};
   add(0,30,{t:"AB Summit",type:"summit",c:"var(--summit)"});
-  add(0,11,{t:"Consecration Week",sub:"Church-wide fast · Jan 11–16 · Tentative",type:"fast",c:"var(--fast)",endD:16});
+  add(0,4,{t:"Consecration Week",sub:"Church-wide fast · Jan 4–9 · Tentative",type:"fast",c:"var(--fast)",endD:9});
   Object.keys(keyDays).forEach(k=>{const [m,d]=k.split("-").map(Number);add(m,d,{t:keyDays[k],type:"key",c:"var(--brass)",ah:/All Hands/.test(keyDays[k])});});
   Object.keys(meets).forEach(m=>{m=+m;add(m,meets[m],{t:"Team Meeting",sub:"10am–2pm",h:10,eh:14,type:"meet",c:"var(--meet)",off:meetFlags[m]?"Cancelled · "+meetFlags[m]:null});});
   for(let m=0;m<12;m++){const n=new Date(Y,m+1,0).getDate();for(let d=1;d<=n;d++){if(new Date(Y,m,d).getDay()===1){const h=holidayMon[key(m,d)];add(m,d,{t:"SWOT",sub:"7pm · Zoom",zoom:true,h:19,eh:20,type:"swot",c:"var(--swot)",off:h?"Cancelled · Holiday ("+h+")":null});}}}
@@ -1102,7 +1102,7 @@ html,body{max-width:100%;overflow-x:clip}
   const hr=x=>{let h=x.getHours(),m=x.getMinutes();const ap=h<12?"am":"pm";h=h%12||12;return h+(m?":"+String(m).padStart(2,"0"):"")+ap;};
   const fmtT=e=>{if(isAllDay(e)){const n=Math.round((e.e-e.s)/864e5);return n>1?"All week · "+MS[e.s.getMonth()]+" "+e.s.getDate()+"–"+new Date(e.e-1).getDate():"All day";}
     const a=hr(e.s),b=hr(e.e);return (a.slice(-2)===b.slice(-2)?a.slice(0,-2):a)+"–"+b;};
-  const subOf=e=>String(e.sub||"").replace(/^\s*\d{1,2}(:\d\d)?\s*(am|pm)?(\s*[–-]\s*\d{1,2}(:\d\d)?\s*(am|pm))?\s*(·\s*)?/i,"").replace(/Church-wide fast · Jan 11–16 · Tentative/,"Church-wide fast · Tentative");
+  const subOf=e=>String(e.sub||"").replace(/^\s*\d{1,2}(:\d\d)?\s*(am|pm)?(\s*[–-]\s*\d{1,2}(:\d\d)?\s*(am|pm))?\s*(·\s*)?/i,"").replace(/Church-wide fast · Jan 4–9 · Tentative/,"Church-wide fast · Tentative");
   const TBD2={7:"Baptism · date TBD",9:"National Access · a Saturday, date TBD"};
   let CF="all";try{CF=localStorage.getItem("ab-cf")||"all";}catch(e){}
   const pass=e=>CF==="all"||e.type===CF||(CF==="key"&&(e.type==="summit"||e.type==="fast"));

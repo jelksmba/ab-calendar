@@ -103,8 +103,8 @@ def nth_weekday(month, weekday, n):
 add("summit-2027", "AB Summit", date(Y, 1, 30))
 
 # Consecration week (tentative)
-add("consecration-2027", "Consecration Week - church-wide fast (Tentative)", date(Y, 1, 11),
-    end=date(Y, 1, 17), tentative=True)
+add("consecration-2027", "Consecration Week - church-wide fast (Tentative)", date(Y, 1, 4),
+    end=date(Y, 1, 10), tentative=True)
 
 # Key dates
 for d, name in KEY_DATES:
