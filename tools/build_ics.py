@@ -155,6 +155,12 @@ for m in range(1, 13):
         add(f"access-{d:%Y%m%d}", "Access", d, hours=((19, 0), (20, 0)),
             desc="Virtual unless announced as in person.")
 
+# 2026 extras: Access on the Wednesday before the 4th Thursday, and Christmas Sunday
+for d in (date(2026, 11, 25), date(2026, 12, 23)):
+    add(f"access-{d:%Y%m%d}", "Access", d, hours=((19, 0), (20, 0)),
+        desc="Wednesday this month. Virtual unless announced as in person.")
+add("key-20261227", "Christmas Sunday (All Hands)", date(2026, 12, 27))
+
 # Quarterly outings (tentative)
 for d, q in OUTINGS:
     add(f"outing-{d:%Y%m%d}", f"AB {q} Outing (Tentative)", d, tentative=True)

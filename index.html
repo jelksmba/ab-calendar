@@ -1048,6 +1048,10 @@ html,body{max-width:100%;overflow-x:clip}
   Object.keys(outingDay).forEach(m=>{m=+m;add(m,outingDay[m],{t:outingMonths[m]+" Team Outing",sub:"Tentative",type:"outing",c:"var(--outing)"});});
   // November & December 2026: SWOTs only (no team meeting, no outing)
   [[10,2],[10,9],[10,16],[10,23],[10,30],[11,7],[11,14],[11,21],[11,28]].forEach(([m,d])=>EV.push({y:2026,m,d,s:new Date(2026,m,d,19),e:new Date(2026,m,d,20),t:"SWOT",sub:"7pm · Zoom",zoom:true,type:"swot",c:"var(--swot)"}));
+  // Access 2026: Wednesday before the 4th Thursday (Thanksgiving Nov 26, Christmas Eve Dec 24)
+  [[10,25],[11,23]].forEach(([m,d])=>EV.push({y:2026,m,d,s:new Date(2026,m,d,19),e:new Date(2026,m,d,20),t:"Access",sub:"7pm · Wednesday this month · virtual unless announced",type:"access",c:"var(--access)"}));
+  // Christmas Sunday 2026
+  EV.push({y:2026,m:11,d:27,s:new Date(2026,11,27),e:new Date(2026,11,28),t:"Christmas Sunday (All Hands)",type:"key",c:"var(--brass)",ah:true});
   EV.sort((a,b)=>a.s-b.s);
   const fmtD=x=>DW[x.getDay()]+", "+MS[x.getMonth()]+" "+x.getDate();
   const ZOOM="https://us02web.zoom.us/j/84578356424";
